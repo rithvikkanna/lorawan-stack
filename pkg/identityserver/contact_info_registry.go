@@ -30,6 +30,8 @@ import (
 	"go.thethings.network/lorawan-stack/v3/pkg/ttnpb"
 )
 
+var errNoValidationNeeded = errors.DefineInvalidArgument("no_validation_needed", "no validation needed for this contact info")
+
 func (is *IdentityServer) requestContactInfoValidation(ctx context.Context, ids *ttnpb.EntityIdentifiers) (*ttnpb.ContactInfoValidation, error) {
 	// NOTE: This does NOT check auth. Internal use only.
 	id, err := auth.GenerateID(ctx)
@@ -68,42 +70,49 @@ func (is *IdentityServer) requestContactInfoValidation(ctx context.Context, ids 
 			validation.ContactInfo = append(validation.ContactInfo, info)
 		}
 	}
-	var pendingContactInfo []*ttnpb.ContactInfo
-	if len(emailValidations) > 0 {
-		err := is.withDatabase(ctx, func(db *gorm.DB) (err error) {
-			for email, validation := range emailValidations {
-				validation, err = store.GetContactInfoStore(db).CreateValidation(ctx, validation)
-				if err != nil {
-					return err
+	if len(emailValidations) == 0 {
+		return nil, errNoValidationNeeded
+	}
+
+	err = is.withDatabase(ctx, func(db *gorm.DB) (err error) {
+		for email, validation := range emailValidations {
+			validation, err = store.GetContactInfoStore(db).CreateValidation(ctx, validation)
+			if err != nil {
+				if errors.IsAlreadyExists(err) {
+					delete(emailValidations, email)
+					continue
 				}
-				log.FromContext(ctx).WithFields(log.Fields(
-					"email", email,
-					"token", validation.Token,
-				)).Info("Created email validation token")
-				emailValidations[email] = validation
+				return err
 			}
-			return nil
+			log.FromContext(ctx).WithFields(log.Fields(
+				"email", email,
+				"token", validation.Token,
+			)).Info("Created email validation token")
+			emailValidations[email] = validation
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	var pendingContactInfo []*ttnpb.ContactInfo
+	for address, validation := range emailValidations {
+		err := is.SendEmail(ctx, func(data emails.Data) email.MessageData {
+			data.User.Email = address
+			data.SetEntity(validation.Entity)
+			return emails.Validate{
+				Data:  data,
+				ID:    validation.ID,
+				Token: validation.Token,
+				TTL:   emailValidationsTTL,
+			}
 		})
 		if err != nil {
-			return nil, err
+			log.FromContext(ctx).WithError(err).Error("Could not send validation email")
 		}
-		for address, validation := range emailValidations {
-			err := is.SendEmail(ctx, func(data emails.Data) email.MessageData {
-				data.User.Email = address
-				data.SetEntity(validation.Entity)
-				return emails.Validate{
-					Data:  data,
-					ID:    validation.ID,
-					Token: validation.Token,
-					TTL:   emailValidationsTTL,
-				}
-			})
-			if err != nil {
-				log.FromContext(ctx).WithError(err).Error("Could not send validation email")
-			}
-			pendingContactInfo = append(pendingContactInfo, validation.ContactInfo...)
-			validation.Token = "" // Unset tokens after sending emails
-		}
+		pendingContactInfo = append(pendingContactInfo, validation.ContactInfo...)
+		validation.Token = "" // Unset tokens after sending emails
 	}
 
 	return &ttnpb.ContactInfoValidation{
