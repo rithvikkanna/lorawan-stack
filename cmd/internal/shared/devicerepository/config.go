@@ -19,10 +19,16 @@ import "go.thethings.network/lorawan-stack/v3/pkg/devicerepository"
 // DefaultDeviceRepositoryConfig is the default configuration for the Device Repository.
 var DefaultDeviceRepositoryConfig = devicerepository.Config{
 	ConfigSource: "url",
-	URL:          "https://raw.githubusercontent.com/TheThingsNetwork/lorawan-devices/master",
+	// TODO: This is for initial development only. Replace after we decide how the
+	// package is built and where it is stored.
+	URL: "https://raw.githubusercontent.com/neoaggelos/lorawan-devices-index/master",
+
+	// TODO: This is for initial development only.
+	WorkingDirectory: "/tmp/dr",
 
 	AssetsBaseURL: "https://raw.githubusercontent.com/TheThingsNetwork/lorawan-devices/master",
-
 	// TODO: Enable by default
 	// RequireAuth: true,
+
+	// TODO: Figure out package update method.
 }
