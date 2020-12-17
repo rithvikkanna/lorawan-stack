@@ -1655,15 +1655,6 @@
       "file": "flags.go"
     }
   },
-  "error:cmd/ttn-lw-stack/commands:invalid_index_type": {
-    "translations": {
-      "en": "invalid index type `{type}`"
-    },
-    "description": {
-      "package": "cmd/ttn-lw-stack/commands",
-      "file": "dr.go"
-    }
-  },
   "error:cmd/ttn-lw-stack/commands:missing_flag": {
     "translations": {
       "en": "missing CLI flag `{flag}`"
@@ -2960,75 +2951,102 @@
       "file": "errors.go"
     }
   },
-  "error:pkg/devicerepository/store/bleve:corrupted_index": {
+  "error:pkg/devicerepository/store/index:corrupted_index": {
     "translations": {
       "en": "corrupted index file"
     },
     "description": {
-      "package": "pkg/devicerepository/store/bleve",
+      "package": "pkg/devicerepository/store/index",
       "file": "store.go"
     }
   },
-  "error:pkg/devicerepository/store/bleve:invalid_refresh_config": {
-    "translations": {
-      "en": "unknown refresh configuration `{refresh}`"
-    },
-    "description": {
-      "package": "pkg/devicerepository/store/bleve",
-      "file": "bleve.go"
-    }
-  },
-  "error:pkg/devicerepository/store/bleve:no_index_fetcher_config": {
+  "error:pkg/devicerepository/store/index:no_fetcher_config": {
     "translations": {
       "en": "no index fetcher configuration specified"
     },
     "description": {
-      "package": "pkg/devicerepository/store/bleve",
-      "file": "bleve.go"
+      "package": "pkg/devicerepository/store/index",
+      "file": "index.go"
     }
   },
-  "error:pkg/devicerepository/store/bleve:no_working_directory": {
+  "error:pkg/devicerepository/store/index:no_working_directory": {
     "translations": {
       "en": "no working directory specified"
     },
     "description": {
-      "package": "pkg/devicerepository/store/bleve",
-      "file": "bleve.go"
+      "package": "pkg/devicerepository/store/index",
+      "file": "index.go"
     }
   },
-  "error:pkg/devicerepository/store:firmware_version_not_found": {
+  "error:pkg/devicerepository/store/remote:firmware_version_not_found": {
     "translations": {
       "en": "firmware version `{firmware_version}` for model `{brand_id}/{model_id}` not found"
     },
     "description": {
-      "package": "pkg/devicerepository/store",
+      "package": "pkg/devicerepository/store/remote",
       "file": "remote.go"
     }
   },
-  "error:pkg/devicerepository/store:model_not_found": {
+  "error:pkg/devicerepository/store/remote:model_not_found": {
     "translations": {
       "en": "model `{brand_id}/{model_id}` not found"
     },
     "description": {
-      "package": "pkg/devicerepository/store",
+      "package": "pkg/devicerepository/store/remote",
       "file": "remote.go"
     }
   },
-  "error:pkg/devicerepository/store:no_codec": {
+  "error:pkg/devicerepository/store/remote:no_codec": {
     "translations": {
       "en": "no codec defined for firmware version `{firmware_version}` and band `{band_id}`"
     },
     "description": {
-      "package": "pkg/devicerepository/store",
+      "package": "pkg/devicerepository/store/remote",
       "file": "remote.go"
     }
   },
-  "error:pkg/devicerepository/store:no_profile": {
+  "error:pkg/devicerepository/store/remote:no_profile": {
     "translations": {
       "en": "device does not support region `{region}`"
     },
     "description": {
-      "package": "pkg/devicerepository/store",
+      "package": "pkg/devicerepository/store/remote",
+      "file": "schema.go"
+    }
+  },
+  "error:pkg/devicerepository/store/remote:unknown_band": {
+    "translations": {
+      "en": "unknown band `{band_id}`"
+    },
+    "description": {
+      "package": "pkg/devicerepository/store/remote",
+      "file": "schema.go"
+    }
+  },
+  "error:pkg/devicerepository/store/remote:unknown_brand": {
+    "translations": {
+      "en": "unknown brand `{brand_id}`"
+    },
+    "description": {
+      "package": "pkg/devicerepository/store/remote",
+      "file": "remote.go"
+    }
+  },
+  "error:pkg/devicerepository/store/remote:unknown_mac_version": {
+    "translations": {
+      "en": "unknown LoRaWAN version `{mac_version}`"
+    },
+    "description": {
+      "package": "pkg/devicerepository/store/remote",
+      "file": "schema.go"
+    }
+  },
+  "error:pkg/devicerepository/store/remote:unknown_regional_parameters_version": {
+    "translations": {
+      "en": "unknown Regional Parameters version `{phyVersion}`"
+    },
+    "description": {
+      "package": "pkg/devicerepository/store/remote",
       "file": "schema.go"
     }
   },
@@ -3039,42 +3057,6 @@
     "description": {
       "package": "pkg/devicerepository/store",
       "file": "noop.go"
-    }
-  },
-  "error:pkg/devicerepository/store:unknown_band": {
-    "translations": {
-      "en": "unknown band `{band_id}`"
-    },
-    "description": {
-      "package": "pkg/devicerepository/store",
-      "file": "schema.go"
-    }
-  },
-  "error:pkg/devicerepository/store:unknown_brand": {
-    "translations": {
-      "en": "unknown brand `{brand_id}`"
-    },
-    "description": {
-      "package": "pkg/devicerepository/store",
-      "file": "remote.go"
-    }
-  },
-  "error:pkg/devicerepository/store:unknown_mac_version": {
-    "translations": {
-      "en": "unknown LoRaWAN version `{mac_version}`"
-    },
-    "description": {
-      "package": "pkg/devicerepository/store",
-      "file": "schema.go"
-    }
-  },
-  "error:pkg/devicerepository/store:unknown_regional_parameters_version": {
-    "translations": {
-      "en": "unknown Regional Parameters version `{phyVersion}`"
-    },
-    "description": {
-      "package": "pkg/devicerepository/store",
-      "file": "schema.go"
     }
   },
   "error:pkg/devicerepository:brand_not_found": {
@@ -3093,15 +3075,6 @@
     "description": {
       "package": "pkg/devicerepository",
       "file": "grpc.go"
-    }
-  },
-  "error:pkg/devicerepository:unknown_index_type": {
-    "translations": {
-      "en": "unknown index type `{type}`"
-    },
-    "description": {
-      "package": "pkg/devicerepository",
-      "file": "config.go"
     }
   },
   "error:pkg/devicetemplateconverter:converter": {
