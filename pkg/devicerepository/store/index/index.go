@@ -17,22 +17,33 @@ package index
 import (
 	"context"
 	"path"
+	"sync"
+	"time"
 
 	"github.com/blevesearch/bleve"
 	"go.thethings.network/lorawan-stack/v3/pkg/devicerepository/store"
 	"go.thethings.network/lorawan-stack/v3/pkg/devicerepository/store/remote"
 	"go.thethings.network/lorawan-stack/v3/pkg/errors"
 	"go.thethings.network/lorawan-stack/v3/pkg/fetch"
+	"go.thethings.network/lorawan-stack/v3/pkg/log"
 )
 
 // indexStore wraps a store.Store adding support for searching/sorting results using a bleve index.
 type indexStore struct {
 	ctx context.Context
 
-	store store.Store
+	store   store.Store
+	storeMu sync.RWMutex
 
-	brandsIndex bleve.Index
-	modelsIndex bleve.Index
+	brandsIndex   bleve.Index
+	brandsIndexMu sync.RWMutex
+	modelsIndex   bleve.Index
+	modelsIndexMu sync.RWMutex
+
+	workingDirectory string
+
+	fetcher   fetch.Interface
+	refreshCh <-chan time.Time
 }
 
 var (
@@ -49,26 +60,15 @@ func NewStore(ctx context.Context, f fetch.Interface, workingDirectory string) (
 		return nil, errNoFetcherConfig.New()
 	}
 
-	b, err := f.File("package.zip")
-	if err != nil {
-		return nil, err
-	}
-	if err := (&archiver{}).Unarchive(b, workingDirectory); err != nil {
-		return nil, err
-	}
-
 	s := &indexStore{
 		ctx: ctx,
 
-		store: remote.NewRemoteStore(fetch.FromFilesystem(workingDirectory)),
+		store:            remote.NewRemoteStore(fetch.FromFilesystem(workingDirectory)),
+		workingDirectory: workingDirectory,
+		fetcher:          f,
 	}
 
-	s.brandsIndex, err = bleve.Open(path.Join(workingDirectory, brandsIndexPath))
-	if err != nil {
-		return nil, err
-	}
-	s.modelsIndex, err = bleve.Open(path.Join(workingDirectory, modelsIndexPath))
-	if err != nil {
+	if err := s.initStore(); err != nil {
 		return nil, err
 	}
 
@@ -80,5 +80,61 @@ func NewStore(ctx context.Context, f fetch.Interface, workingDirectory string) (
 		}
 	}()
 
+	s.refreshCh = time.NewTicker(time.Hour).C
+	go func() {
+		for {
+			select {
+			case <-s.ctx.Done():
+				return
+			case <-s.refreshCh:
+				logger := log.FromContext(ctx)
+
+				logger.Debug("Refreshing Device Repository")
+				if err := s.initStore(); err != nil {
+					logger.WithError(err).Error("Failed to refresh device repository")
+				} else {
+					logger.Info("Updated Device Repository")
+				}
+			}
+		}
+	}()
+
 	return s, nil
+}
+
+func (s *indexStore) initStore() error {
+	b, err := s.fetcher.File("package.zip")
+	if err != nil {
+		return err
+	}
+
+	s.storeMu.Lock()
+	defer s.storeMu.Unlock()
+	if err := (&archiver{}).Unarchive(b, s.workingDirectory); err != nil {
+		return err
+	}
+
+	s.brandsIndexMu.Lock()
+	defer s.brandsIndexMu.Unlock()
+	if s.brandsIndex != nil {
+		if err := s.brandsIndex.Close(); err != nil {
+			return err
+		}
+	}
+	s.brandsIndex, err = bleve.Open(path.Join(s.workingDirectory, brandsIndexPath))
+	if err != nil {
+		return err
+	}
+	s.modelsIndexMu.Lock()
+	defer s.modelsIndexMu.Unlock()
+	if s.modelsIndex != nil {
+		if err := s.modelsIndex.Close(); err != nil {
+			return err
+		}
+	}
+	s.modelsIndex, err = bleve.Open(path.Join(s.workingDirectory, modelsIndexPath))
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -60,10 +60,12 @@ func (s *indexStore) GetBrands(req store.GetBrandsRequest) (*store.GetBrandsResp
 		searchRequest.SortBy([]string{"-BrandName"})
 	}
 
+	s.brandsIndexMu.RLock()
 	result, err := s.brandsIndex.Search(searchRequest)
 	if err != nil {
 		return nil, err
 	}
+	s.brandsIndexMu.RUnlock()
 
 	brands := make([]*ttnpb.EndDeviceBrand, 0, len(result.Hits))
 	for _, hit := range result.Hits {
@@ -130,10 +132,12 @@ func (s *indexStore) GetModels(req store.GetModelsRequest) (*store.GetModelsResp
 		searchRequest.SortBy([]string{"-ModelName"})
 	}
 
+	s.modelsIndexMu.RLock()
 	result, err := s.modelsIndex.Search(searchRequest)
 	if err != nil {
 		return nil, err
 	}
+	s.modelsIndexMu.RUnlock()
 
 	models := make([]*ttnpb.EndDeviceModel, 0, len(result.Hits))
 	for _, hit := range result.Hits {
@@ -161,20 +165,28 @@ func (s *indexStore) GetModels(req store.GetModelsRequest) (*store.GetModelsResp
 
 // GetTemplate retrieves an end device template for an end device definition.
 func (s *indexStore) GetTemplate(ids *ttnpb.EndDeviceVersionIdentifiers) (*ttnpb.EndDeviceTemplate, error) {
+	s.storeMu.RLock()
+	defer s.storeMu.RUnlock()
 	return s.store.GetTemplate(ids)
 }
 
 // GetUplinkDecoder retrieves the codec for decoding uplink messages.
 func (s *indexStore) GetUplinkDecoder(ids *ttnpb.EndDeviceVersionIdentifiers) (*ttnpb.MessagePayloadFormatter, error) {
+	s.storeMu.RLock()
+	defer s.storeMu.RUnlock()
 	return s.store.GetUplinkDecoder(ids)
 }
 
 // GetDownlinkDecoder retrieves the codec for decoding downlink messages.
 func (s *indexStore) GetDownlinkDecoder(ids *ttnpb.EndDeviceVersionIdentifiers) (*ttnpb.MessagePayloadFormatter, error) {
+	s.storeMu.RLock()
+	defer s.storeMu.RUnlock()
 	return s.store.GetDownlinkDecoder(ids)
 }
 
 // GetDownlinkEncoder retrieves the codec for encoding downlink messages.
 func (s *indexStore) GetDownlinkEncoder(ids *ttnpb.EndDeviceVersionIdentifiers) (*ttnpb.MessagePayloadFormatter, error) {
+	s.storeMu.RLock()
+	defer s.storeMu.RUnlock()
 	return s.store.GetDownlinkEncoder(ids)
 }
