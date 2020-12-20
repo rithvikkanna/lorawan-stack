@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package index
+package bleve
 
 import (
 	"github.com/blevesearch/bleve"
@@ -28,7 +28,7 @@ var (
 )
 
 // GetBrands lists available end device vendors.
-func (s *indexStore) GetBrands(req store.GetBrandsRequest) (*store.GetBrandsResponse, error) {
+func (s *bleveStore) GetBrands(req store.GetBrandsRequest) (*store.GetBrandsResponse, error) {
 	queries := []query.Query{
 		bleve.NewMatchAllQuery(),
 	}
@@ -92,7 +92,7 @@ func (s *indexStore) GetBrands(req store.GetBrandsRequest) (*store.GetBrandsResp
 }
 
 // GetModels lists available end device definitions.
-func (s *indexStore) GetModels(req store.GetModelsRequest) (*store.GetModelsResponse, error) {
+func (s *bleveStore) GetModels(req store.GetModelsRequest) (*store.GetModelsResponse, error) {
 	queries := []query.Query{
 		bleve.NewMatchAllQuery(),
 	}
@@ -164,28 +164,28 @@ func (s *indexStore) GetModels(req store.GetModelsRequest) (*store.GetModelsResp
 }
 
 // GetTemplate retrieves an end device template for an end device definition.
-func (s *indexStore) GetTemplate(ids *ttnpb.EndDeviceVersionIdentifiers) (*ttnpb.EndDeviceTemplate, error) {
+func (s *bleveStore) GetTemplate(ids *ttnpb.EndDeviceVersionIdentifiers) (*ttnpb.EndDeviceTemplate, error) {
 	s.storeMu.RLock()
 	defer s.storeMu.RUnlock()
 	return s.store.GetTemplate(ids)
 }
 
 // GetUplinkDecoder retrieves the codec for decoding uplink messages.
-func (s *indexStore) GetUplinkDecoder(ids *ttnpb.EndDeviceVersionIdentifiers) (*ttnpb.MessagePayloadFormatter, error) {
+func (s *bleveStore) GetUplinkDecoder(ids *ttnpb.EndDeviceVersionIdentifiers) (*ttnpb.MessagePayloadFormatter, error) {
 	s.storeMu.RLock()
 	defer s.storeMu.RUnlock()
 	return s.store.GetUplinkDecoder(ids)
 }
 
 // GetDownlinkDecoder retrieves the codec for decoding downlink messages.
-func (s *indexStore) GetDownlinkDecoder(ids *ttnpb.EndDeviceVersionIdentifiers) (*ttnpb.MessagePayloadFormatter, error) {
+func (s *bleveStore) GetDownlinkDecoder(ids *ttnpb.EndDeviceVersionIdentifiers) (*ttnpb.MessagePayloadFormatter, error) {
 	s.storeMu.RLock()
 	defer s.storeMu.RUnlock()
 	return s.store.GetDownlinkDecoder(ids)
 }
 
 // GetDownlinkEncoder retrieves the codec for encoding downlink messages.
-func (s *indexStore) GetDownlinkEncoder(ids *ttnpb.EndDeviceVersionIdentifiers) (*ttnpb.MessagePayloadFormatter, error) {
+func (s *bleveStore) GetDownlinkEncoder(ids *ttnpb.EndDeviceVersionIdentifiers) (*ttnpb.MessagePayloadFormatter, error) {
 	s.storeMu.RLock()
 	defer s.storeMu.RUnlock()
 	return s.store.GetDownlinkEncoder(ids)

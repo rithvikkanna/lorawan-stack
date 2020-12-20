@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package index
+package bleve
 
 import (
 	"context"
@@ -28,8 +28,8 @@ import (
 	"go.thethings.network/lorawan-stack/v3/pkg/log"
 )
 
-// indexStore wraps a store.Store adding support for searching/sorting results using a bleve index.
-type indexStore struct {
+// bleveStore wraps a store.Store adding support for searching/sorting results using a bleve index.
+type bleveStore struct {
 	ctx context.Context
 
 	store   store.Store
@@ -51,23 +51,28 @@ var (
 	errNoFetcherConfig    = errors.DefineInvalidArgument("no_fetcher_config", "no index fetcher configuration specified")
 )
 
-// NewStore returns a new indexStore from configuration.
-func NewStore(ctx context.Context, f fetch.Interface, workingDirectory string) (store.Store, error) {
-	if workingDirectory == "" {
+// NewStore returns a new device repository store with indexing capabilities (using bleve).
+func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, error) {
+	if c.WorkingDirectory == "" {
 		return nil, errNoWorkingDirectory.New()
 	}
 	if f == nil {
 		return nil, errNoFetcherConfig.New()
 	}
 
-	s := &indexStore{
+	s := &bleveStore{
 		ctx: ctx,
 
-		store:            remote.NewRemoteStore(fetch.FromFilesystem(workingDirectory)),
-		workingDirectory: workingDirectory,
+		store:            remote.NewRemoteStore(fetch.FromFilesystem(c.WorkingDirectory)),
+		workingDirectory: c.WorkingDirectory,
 		fetcher:          f,
 	}
 
+	if c.RefreshOnStart {
+		if err := s.fetchStore(); err != nil {
+			return nil, err
+		}
+	}
 	if err := s.initStore(); err != nil {
 		return nil, err
 	}
@@ -80,29 +85,31 @@ func NewStore(ctx context.Context, f fetch.Interface, workingDirectory string) (
 		}
 	}()
 
-	s.refreshCh = time.NewTicker(time.Hour).C
-	go func() {
-		for {
-			select {
-			case <-s.ctx.Done():
-				return
-			case <-s.refreshCh:
-				logger := log.FromContext(ctx)
+	if t := c.Refresh; t != nil {
+		s.refreshCh = time.NewTicker(*t).C
+		go func() {
+			for {
+				select {
+				case <-s.ctx.Done():
+					return
+				case <-s.refreshCh:
+					logger := log.FromContext(ctx)
 
-				logger.Debug("Refreshing Device Repository")
-				if err := s.initStore(); err != nil {
-					logger.WithError(err).Error("Failed to refresh device repository")
-				} else {
-					logger.Info("Updated Device Repository")
+					logger.Debug("Refreshing Device Repository")
+					if err := s.initStore(); err != nil {
+						logger.WithError(err).Error("Failed to refresh device repository")
+					} else {
+						logger.Info("Updated Device Repository")
+					}
 				}
 			}
-		}
-	}()
+		}()
+	}
 
 	return s, nil
 }
 
-func (s *indexStore) initStore() error {
+func (s *bleveStore) fetchStore() error {
 	b, err := s.fetcher.File("package.zip")
 	if err != nil {
 		return err
@@ -110,10 +117,11 @@ func (s *indexStore) initStore() error {
 
 	s.storeMu.Lock()
 	defer s.storeMu.Unlock()
-	if err := (&archiver{}).Unarchive(b, s.workingDirectory); err != nil {
-		return err
-	}
+	return (&archiver{}).Unarchive(b, s.workingDirectory)
+}
 
+func (s *bleveStore) initStore() error {
+	var err error
 	s.brandsIndexMu.Lock()
 	defer s.brandsIndexMu.Unlock()
 	if s.brandsIndex != nil {

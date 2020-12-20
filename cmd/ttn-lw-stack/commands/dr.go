@@ -16,7 +16,7 @@ package commands
 
 import (
 	"github.com/spf13/cobra"
-	"go.thethings.network/lorawan-stack/v3/pkg/devicerepository/store/index"
+	"go.thethings.network/lorawan-stack/v3/pkg/devicerepository/store/bleve"
 	"go.thethings.network/lorawan-stack/v3/pkg/fetch"
 )
 
@@ -41,7 +41,7 @@ var (
 			}
 			overwrite, _ := cmd.Flags().GetBool("overwrite")
 
-			if err := index.CreatePackage(ctx, fetch.FromFilesystem(source), source, output, overwrite); err != nil {
+			if err := bleve.CreatePackage(ctx, fetch.FromFilesystem(source), source, output, overwrite); err != nil {
 				return err
 			}
 			logger.WithField("path", output).Info("Successfully created index")

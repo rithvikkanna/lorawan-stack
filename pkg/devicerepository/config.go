@@ -19,7 +19,7 @@ import (
 
 	"go.thethings.network/lorawan-stack/v3/pkg/config"
 	"go.thethings.network/lorawan-stack/v3/pkg/devicerepository/store"
-	"go.thethings.network/lorawan-stack/v3/pkg/devicerepository/store/index"
+	"go.thethings.network/lorawan-stack/v3/pkg/devicerepository/store/bleve"
 	"go.thethings.network/lorawan-stack/v3/pkg/fetch"
 )
 
@@ -33,7 +33,7 @@ type Config struct {
 	URL          string                `name:"url" description:"URL, which contains device repository package"`
 	Blob         config.BlobPathConfig `name:"blob"`
 
-	WorkingDirectory string `name:"working-directory" description:"Local directory where temporary Device Repository files are stored"`
+	Bleve bleve.Config `name:"bleve"`
 
 	AssetsBaseURL string `name:"assets-base-url" description:"The base URL for assets"`
 }
@@ -49,21 +49,28 @@ func (c Config) NewStore(ctx context.Context, blobConf config.BlobConfig) (store
 		return c.Store.Store, nil
 	}
 	var fetcher fetch.Interface
-	switch {
-	case c.Static != nil:
+	switch c.ConfigSource {
+	case "static":
 		fetcher = fetch.NewMemFetcher(c.Static)
-	case c.Directory != "":
+	case "directory":
 		fetcher = fetch.FromFilesystem(c.Directory)
-	case c.URL != "":
+	case "url":
 		var err error
 		fetcher, err = fetch.FromHTTP(c.URL, true)
 		if err != nil {
 			return nil, err
 		}
+	case "blob":
+		b, err := blobConf.Bucket(ctx, c.Blob.Bucket)
+		if err != nil {
+			return nil, err
+		}
+		fetcher = fetch.FromBucket(ctx, b, c.Blob.Path)
 	default:
 		return &store.NoopStore{}, nil
 	}
-	s, err := index.NewStore(ctx, fetcher, c.WorkingDirectory)
+
+	s, err := c.Bleve.NewStore(ctx, fetcher)
 	if err != nil {
 		return nil, err
 	}

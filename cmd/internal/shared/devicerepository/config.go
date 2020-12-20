@@ -14,7 +14,10 @@
 
 package devicerepository
 
-import "go.thethings.network/lorawan-stack/v3/pkg/devicerepository"
+import (
+	"go.thethings.network/lorawan-stack/v3/pkg/devicerepository"
+	"go.thethings.network/lorawan-stack/v3/pkg/devicerepository/store/bleve"
+)
 
 // DefaultDeviceRepositoryConfig is the default configuration for the Device Repository.
 var DefaultDeviceRepositoryConfig = devicerepository.Config{
@@ -24,7 +27,12 @@ var DefaultDeviceRepositoryConfig = devicerepository.Config{
 	URL: "https://raw.githubusercontent.com/neoaggelos/lorawan-devices-index/master",
 
 	// TODO: This is for initial development only.
-	WorkingDirectory: "/tmp/dr",
+	Bleve: bleve.Config{
+		WorkingDirectory: "/tmp/dr",
+
+		RefreshOnStart: false,
+		Refresh:        nil,
+	},
 
 	AssetsBaseURL: "https://raw.githubusercontent.com/TheThingsNetwork/lorawan-devices/master",
 	// TODO: Enable by default
