@@ -28,6 +28,11 @@ import (
 	"go.thethings.network/lorawan-stack/v3/pkg/log"
 )
 
+// defaultTimeout is the timeout while trying to open the index. This is to avoid
+// blocking on the index open call, which will hung indefinetetly if the index
+// is already in use by a different process.
+var defaultTimeout = 5 * time.Second
+
 // bleveStore wraps a store.Store adding support for searching/sorting results using a bleve index.
 type bleveStore struct {
 	ctx context.Context
@@ -120,6 +125,29 @@ func (s *bleveStore) fetchStore() error {
 	return (&archiver{}).Unarchive(b, s.workingDirectory)
 }
 
+var (
+	errIndexTimeout = errors.DefineFailedPrecondition("index_timeout", "Timed out while opening index. Make sure the index is not being used by another process")
+)
+
+func (s *bleveStore) openIndexWithTimeout(path string, timeout time.Duration) (bleve.Index, error) {
+	var (
+		err   error
+		index bleve.Index
+	)
+	ch := make(chan struct{}, 1)
+	defer close(ch)
+	go func() {
+		index, err = bleve.Open(path)
+		ch <- struct{}{}
+	}()
+	select {
+	case <-ch:
+		return index, err
+	case <-time.After(timeout):
+		return nil, errIndexTimeout.New()
+	}
+}
+
 func (s *bleveStore) initStore() error {
 	var err error
 	s.brandsIndexMu.Lock()
@@ -129,7 +157,7 @@ func (s *bleveStore) initStore() error {
 			return err
 		}
 	}
-	s.brandsIndex, err = bleve.Open(path.Join(s.workingDirectory, brandsIndexPath))
+	s.brandsIndex, err = s.openIndexWithTimeout(path.Join(s.workingDirectory, brandsIndexPath), defaultTimeout)
 	if err != nil {
 		return err
 	}
@@ -140,7 +168,7 @@ func (s *bleveStore) initStore() error {
 			return err
 		}
 	}
-	s.modelsIndex, err = bleve.Open(path.Join(s.workingDirectory, modelsIndexPath))
+	s.modelsIndex, err = s.openIndexWithTimeout(path.Join(s.workingDirectory, modelsIndexPath), defaultTimeout)
 	if err != nil {
 		return err
 	}
