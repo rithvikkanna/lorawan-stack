@@ -30,8 +30,8 @@ var DefaultDeviceRepositoryConfig = devicerepository.Config{
 	Bleve: bleve.Config{
 		WorkingDirectory: "/tmp/dr",
 
-		RefreshOnStart: false,
-		Refresh:        nil,
+		AutoInit: false,
+		Refresh:  nil,
 	},
 
 	AssetsBaseURL: "https://raw.githubusercontent.com/TheThingsNetwork/lorawan-devices/master",

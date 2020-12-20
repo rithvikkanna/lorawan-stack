@@ -68,7 +68,7 @@ func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, e
 		fetcher:          f,
 	}
 
-	if c.RefreshOnStart {
+	if c.AutoInit {
 		if err := s.fetchStore(); err != nil {
 			return nil, err
 		}

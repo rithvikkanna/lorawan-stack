@@ -48,6 +48,17 @@ var (
 			return nil
 		},
 	}
+	drInitCommand = &cobra.Command{
+		Use:   "init",
+		Short: "Initialize device repository",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			config.DeviceRepository.Bleve.AutoInit = true
+			config.DeviceRepository.Bleve.Refresh = nil
+
+			_, err := config.DeviceRepository.NewStore(ctx, config.Blob)
+			return err
+		},
+	}
 )
 
 func init() {
@@ -57,4 +68,5 @@ func init() {
 	drCreateIndexCommand.Flags().String("source", "", "Path to root directory of lorawan-devices repository")
 	drCreateIndexCommand.Flags().Bool("overwrite", false, "Overwrite previous index files")
 	drCommand.AddCommand(drCreateIndexCommand)
+	drCommand.AddCommand(drInitCommand)
 }
