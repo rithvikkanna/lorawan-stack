@@ -2951,31 +2951,40 @@
       "file": "errors.go"
     }
   },
-  "error:pkg/devicerepository/store/index:corrupted_index": {
+  "error:pkg/devicerepository/store/bleve:corrupted_index": {
     "translations": {
       "en": "corrupted index file"
     },
     "description": {
-      "package": "pkg/devicerepository/store/index",
+      "package": "pkg/devicerepository/store/bleve",
       "file": "store.go"
     }
   },
-  "error:pkg/devicerepository/store/index:no_fetcher_config": {
+  "error:pkg/devicerepository/store/bleve:index_timeout": {
+    "translations": {
+      "en": "Timed out while opening index. Make sure the index is not being used by another process"
+    },
+    "description": {
+      "package": "pkg/devicerepository/store/bleve",
+      "file": "bleve.go"
+    }
+  },
+  "error:pkg/devicerepository/store/bleve:no_fetcher_config": {
     "translations": {
       "en": "no index fetcher configuration specified"
     },
     "description": {
-      "package": "pkg/devicerepository/store/index",
-      "file": "index.go"
+      "package": "pkg/devicerepository/store/bleve",
+      "file": "bleve.go"
     }
   },
-  "error:pkg/devicerepository/store/index:no_working_directory": {
+  "error:pkg/devicerepository/store/bleve:no_working_directory": {
     "translations": {
       "en": "no working directory specified"
     },
     "description": {
-      "package": "pkg/devicerepository/store/index",
-      "file": "index.go"
+      "package": "pkg/devicerepository/store/bleve",
+      "file": "bleve.go"
     }
   },
   "error:pkg/devicerepository/store/remote:firmware_version_not_found": {
