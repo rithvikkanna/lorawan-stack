@@ -33,14 +33,14 @@ type Config struct {
 	URL          string                `name:"url" description:"URL, which contains device repository package"`
 	Blob         config.BlobPathConfig `name:"blob"`
 
-	Bleve bleve.Config `name:"bleve"`
-
 	AssetsBaseURL string `name:"assets-base-url" description:"The base URL for assets"`
 }
 
 // StoreConfig represents configuration for the Device Repository store.
 type StoreConfig struct {
 	Store store.Store `name:"-"`
+
+	Bleve bleve.Config `name:"bleve"`
 }
 
 // NewStore creates a new Store for end devices.
@@ -70,7 +70,7 @@ func (c Config) NewStore(ctx context.Context, blobConf config.BlobConfig) (store
 		return &store.NoopStore{}, nil
 	}
 
-	s, err := c.Bleve.NewStore(ctx, fetcher)
+	s, err := c.Store.Bleve.NewStore(ctx, fetcher)
 	if err != nil {
 		return nil, err
 	}

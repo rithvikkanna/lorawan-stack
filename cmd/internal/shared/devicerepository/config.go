@@ -27,16 +27,15 @@ var DefaultDeviceRepositoryConfig = devicerepository.Config{
 	URL: "https://raw.githubusercontent.com/neoaggelos/lorawan-devices-index/master",
 
 	// TODO: This is for initial development only.
-	Bleve: bleve.Config{
-		WorkingDirectory: "/tmp/dr",
-
-		AutoInit: false,
-		Refresh:  nil,
+	Store: devicerepository.StoreConfig{
+		Bleve: bleve.Config{
+			WorkingDirectory: "/tmp/dr",
+			AutoInit:         false,
+			Refresh:          nil,
+		},
 	},
 
 	AssetsBaseURL: "https://raw.githubusercontent.com/TheThingsNetwork/lorawan-devices/master",
 	// TODO: Enable by default
 	// RequireAuth: true,
-
-	// TODO: Figure out package update method.
 }
