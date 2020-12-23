@@ -23,6 +23,17 @@ import (
 	"go.thethings.network/lorawan-stack/v3/pkg/ttnpb"
 )
 
+// dutyCycleFromFloat converts a float value (0 < dc < 1) to a ttnpb.AggregatedDutyCycle
+// enum value. The enum value is rounded-down to the closest value, which means
+// that dc == 0.3 will return ttnpb.DUTY_CYCLE_4 (== 0.25).
+func dutyCycleFromFloat(dc float64) ttnpb.AggregatedDutyCycle {
+	counts := 0
+	for counts = 0; dc < 1 && counts < 15; counts++ {
+		dc *= 2
+	}
+	return ttnpb.AggregatedDutyCycle(counts)
+}
+
 // Vendor is an end device vendor.
 type Vendor struct {
 	ID       string   `yaml:"id"`

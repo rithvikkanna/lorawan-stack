@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package remote_test
+package remote
 
 import (
 	"testing"
 
 	"github.com/smartystreets/assertions"
-	"go.thethings.network/lorawan-stack/v3/pkg/devicerepository/store/remote"
 	"go.thethings.network/lorawan-stack/v3/pkg/ttnpb"
 	"go.thethings.network/lorawan-stack/v3/pkg/util/test/assertions/should"
 )
@@ -50,6 +49,6 @@ func TestDutyCycleFromFloat(t *testing.T) {
 		},
 	} {
 		a := assertions.New(t)
-		a.So(remote.DutyCycleFromFloat(tc.Float), should.Equal, tc.Enum)
+		a.So(dutyCycleFromFloat(tc.Float), should.Equal, tc.Enum)
 	}
 }
