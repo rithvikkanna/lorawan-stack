@@ -397,6 +397,7 @@ func (p EndDeviceProfile) ToTemplatePB(ids *ttnpb.EndDeviceVersionIdentifiers, i
 		dev.MACSettings.Rx2Frequency = &pbtypes.UInt64Value{
 			Value: uint64(p.Rx2Frequency * 100000),
 		}
+		paths = append(paths, "mac_settings.rx2_frequency")
 	}
 	if p.Supports32BitFCnt {
 		dev.MACSettings.Supports32BitFCnt = &pbtypes.BoolValue{
@@ -404,7 +405,7 @@ func (p EndDeviceProfile) ToTemplatePB(ids *ttnpb.EndDeviceVersionIdentifiers, i
 		}
 		paths = append(paths, "mac_settings.supports_32_bit_f_cnt")
 	}
-	if fs := p.FactoryPresetFrequencies; fs != nil && len(fs) > 0 {
+	if fs := p.FactoryPresetFrequencies; len(fs) > 0 {
 		dev.MACSettings.FactoryPresetFrequencies = make([]uint64, 0, len(fs))
 		for _, freq := range fs {
 			dev.MACSettings.FactoryPresetFrequencies = append(dev.MACSettings.FactoryPresetFrequencies, uint64(freq*100000))
@@ -413,7 +414,7 @@ func (p EndDeviceProfile) ToTemplatePB(ids *ttnpb.EndDeviceVersionIdentifiers, i
 	}
 	if dc := p.MaxDutyCycle; dc > 0 {
 		dev.MACSettings.DesiredMaxDutyCycle = &ttnpb.AggregatedDutyCycleValue{
-			Value: DutyCycleFromFloat(dc),
+			Value: dutyCycleFromFloat(dc),
 		}
 		paths = append(paths, "mac_settings.desired_max_duty_cycle")
 	}
