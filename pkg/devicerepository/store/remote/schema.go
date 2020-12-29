@@ -125,13 +125,19 @@ type EndDeviceModel struct {
 		Main  string   `yaml:"main"`
 		Other []string `yaml:"other"`
 	} `yaml:"photos"`
+	Video  string `yaml:"video"`
 	Videos *struct {
 		Main  string   `yaml:"main"`
 		Other []string `yaml:"other"`
 	} `yaml:"videos"`
 	ProductURL   string `yaml:"productURL"`
 	DatasheetURL string `yaml:"datasheetURL"`
-	Compliances  *struct {
+	ResellerURLs []struct {
+		Name   string   `yaml:"name"`
+		Region []string `yaml:"region"`
+		URL    string   `yaml:"url"`
+	} `yaml:"resellerURLs"`
+	Compliances *struct {
 		Safety []struct {
 			Body     string `yaml:"body"`
 			Norm     string `yaml:"norm"`
@@ -144,7 +150,7 @@ type EndDeviceModel struct {
 			Standard string `yaml:"standard"`
 			Version  string `yaml:"version"`
 		} `yaml:"radioEquipment"`
-	}
+	} `yaml:"compliances"`
 	AdditionalRadios []string `yaml:"additionalRadios"`
 }
 
@@ -163,6 +169,7 @@ func (d EndDeviceModel) ToPB(brandID, modelID string, paths ...string) (*ttnpb.E
 		ProductURL:       d.ProductURL,
 		DatasheetURL:     d.DatasheetURL,
 		AdditionalRadios: d.AdditionalRadios,
+		Video:            d.Video,
 	}
 
 	if hwVersions := d.HardwareVersions; hwVersions != nil {
@@ -248,6 +255,17 @@ func (d EndDeviceModel) ToPB(brandID, modelID string, paths ...string) (*ttnpb.E
 		pb.Videos = &ttnpb.EndDeviceModel_Videos{
 			Main:  v.Main,
 			Other: v.Other,
+		}
+	}
+
+	if rs := d.ResellerURLs; len(rs) > 0 {
+		pb.Resellers = make([]*ttnpb.EndDeviceModel_Reseller, 0, len(rs))
+		for _, reseller := range rs {
+			pb.Resellers = append(pb.Resellers, &ttnpb.EndDeviceModel_Reseller{
+				Name:   reseller.Name,
+				URL:    reseller.URL,
+				Region: reseller.Region,
+			})
 		}
 	}
 

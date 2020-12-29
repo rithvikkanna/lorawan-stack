@@ -141,11 +141,22 @@ keySecurity: read protected
 photos:
   main: a.jpg
   other: [b.jpg, c.jpg]
+video: a.mp4
 videos:
   main: a.mp4
   other: [b.mp4, "https://youtube.com/watch?v=c.mp4"]
 productURL: https://product.vendor.io
 datasheetURL: https://production.vendor.io/datasheet.pdf
+resellerURLs:
+- name: Reseller 1
+  region:
+  - European Union
+  url: https://example.com/eu
+- name: Reseller 2
+  region:
+  - United States
+  - Canada
+  url: https://example.com/na
 compliances:
   safety:
   - {body: IEC, norm: EN, standard: 62368-1}
@@ -429,12 +440,25 @@ func TestRemoteStore(t *testing.T) {
 					Main:  "a.jpg",
 					Other: []string{"b.jpg", "c.jpg"},
 				},
+				Video: "a.mp4",
 				Videos: &ttnpb.EndDeviceModel_Videos{
 					Main:  "a.mp4",
 					Other: []string{"b.mp4", "https://youtube.com/watch?v=c.mp4"},
 				},
 				ProductURL:   "https://product.vendor.io",
 				DatasheetURL: "https://production.vendor.io/datasheet.pdf",
+				Resellers: []*ttnpb.EndDeviceModel_Reseller{
+					{
+						Name:   "Reseller 1",
+						Region: []string{"European Union"},
+						URL:    "https://example.com/eu",
+					},
+					{
+						Name:   "Reseller 2",
+						Region: []string{"United States", "Canada"},
+						URL:    "https://example.com/na",
+					},
+				},
 				Compliances: &ttnpb.EndDeviceModel_Compliances{
 					Safety: []*ttnpb.EndDeviceModel_Compliances_Compliance{
 						{
