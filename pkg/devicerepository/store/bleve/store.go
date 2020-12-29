@@ -36,7 +36,7 @@ func (s *bleveStore) GetBrands(req store.GetBrandsRequest) (*store.GetBrandsResp
 		queries = append(queries, bleve.NewQueryStringQuery(q))
 	}
 	if q := req.BrandID; q != "" {
-		query := bleve.NewMatchQuery(q)
+		query := bleve.NewTermQuery(q)
 		query.SetField("BrandID")
 		queries = append(queries, query)
 	}
@@ -100,12 +100,12 @@ func (s *bleveStore) GetModels(req store.GetModelsRequest) (*store.GetModelsResp
 		queries = append(queries, bleve.NewQueryStringQuery(q))
 	}
 	if q := req.BrandID; q != "" {
-		query := bleve.NewMatchQuery(q)
+		query := bleve.NewTermQuery(q)
 		query.SetField("BrandID")
 		queries = append(queries, query)
 	}
 	if q := req.ModelID; q != "" {
-		query := bleve.NewMatchQuery(q)
+		query := bleve.NewTermQuery(q)
 		query.SetField("ModelID")
 		queries = append(queries, query)
 	}
