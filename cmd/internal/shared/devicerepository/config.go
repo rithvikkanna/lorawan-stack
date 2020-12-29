@@ -24,7 +24,7 @@ var DefaultDeviceRepositoryConfig = devicerepository.Config{
 	ConfigSource: "url",
 	// TODO: This is for initial development only. Replace after we decide how the
 	// package is built and where it is stored.
-	URL: "https://raw.githubusercontent.com/neoaggelos/lorawan-devices-index/master",
+	URL: "https://raw.githubusercontent.com/neoaggelos/lorawan-devices/package/v3.11",
 
 	// TODO: This is for initial development only.
 	Store: devicerepository.StoreConfig{
@@ -35,6 +35,4 @@ var DefaultDeviceRepositoryConfig = devicerepository.Config{
 	},
 
 	AssetsBaseURL: "https://raw.githubusercontent.com/TheThingsNetwork/lorawan-devices/master",
-	// TODO: Enable by default
-	// RequireAuth: true,
 }
