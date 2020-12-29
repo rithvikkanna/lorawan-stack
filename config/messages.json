@@ -2960,27 +2960,9 @@
       "file": "store.go"
     }
   },
-  "error:pkg/devicerepository/store/bleve:index_timeout": {
-    "translations": {
-      "en": "Timed out while opening index. Make sure the index is not being used by another process"
-    },
-    "description": {
-      "package": "pkg/devicerepository/store/bleve",
-      "file": "bleve.go"
-    }
-  },
   "error:pkg/devicerepository/store/bleve:no_fetcher_config": {
     "translations": {
       "en": "no index fetcher configuration specified"
-    },
-    "description": {
-      "package": "pkg/devicerepository/store/bleve",
-      "file": "bleve.go"
-    }
-  },
-  "error:pkg/devicerepository/store/bleve:no_working_directory": {
-    "translations": {
-      "en": "no working directory specified"
     },
     "description": {
       "package": "pkg/devicerepository/store/bleve",
@@ -3014,9 +2996,18 @@
       "file": "remote.go"
     }
   },
-  "error:pkg/devicerepository/store/remote:no_profile": {
+  "error:pkg/devicerepository/store/remote:no_profile_for_bnad": {
     "translations": {
-      "en": "device does not support region `{region}`"
+      "en": "device does not have a profile for band `{region}`"
+    },
+    "description": {
+      "package": "pkg/devicerepository/store/remote",
+      "file": "remote.go"
+    }
+  },
+  "error:pkg/devicerepository/store/remote:regional_parameters_version": {
+    "translations": {
+      "en": "unknown Regional Parameters version `{phy_version}`"
     },
     "description": {
       "package": "pkg/devicerepository/store/remote",
@@ -3025,11 +3016,11 @@
   },
   "error:pkg/devicerepository/store/remote:unknown_band": {
     "translations": {
-      "en": "unknown band `{band_id}`"
+      "en": "band not found `{band_id}`"
     },
     "description": {
       "package": "pkg/devicerepository/store/remote",
-      "file": "schema.go"
+      "file": "remote.go"
     }
   },
   "error:pkg/devicerepository/store/remote:unknown_brand": {
@@ -3039,24 +3030,6 @@
     "description": {
       "package": "pkg/devicerepository/store/remote",
       "file": "remote.go"
-    }
-  },
-  "error:pkg/devicerepository/store/remote:unknown_mac_version": {
-    "translations": {
-      "en": "unknown LoRaWAN version `{mac_version}`"
-    },
-    "description": {
-      "package": "pkg/devicerepository/store/remote",
-      "file": "schema.go"
-    }
-  },
-  "error:pkg/devicerepository/store/remote:unknown_regional_parameters_version": {
-    "translations": {
-      "en": "unknown Regional Parameters version `{phyVersion}`"
-    },
-    "description": {
-      "package": "pkg/devicerepository/store/remote",
-      "file": "schema.go"
     }
   },
   "error:pkg/devicerepository/store:not_found": {

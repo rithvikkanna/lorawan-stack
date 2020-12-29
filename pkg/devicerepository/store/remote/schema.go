@@ -306,19 +306,13 @@ type EndDeviceProfile struct {
 	Supports32BitFCnt         bool                `yaml:"supports32bitFCnt"`
 }
 
-var (
-	errUnknownBand = errors.DefineNotFound("unknown_band", "unknown band `{band_id}`")
-	errNoProfile   = errors.DefineNotFound("no_profile", "device does not support region `{region}`")
-
-	errUnknownMACVersion                = errors.DefineNotFound("unknown_mac_version", "unknown LoRaWAN version `{mac_version}`")
-	errUnknownRegionalParametersVersion = errors.DefineNotFound("unknown_regional_parameters_version", "unknown Regional Parameters version `{phyVersion}`")
-)
+var errRegionalParametersVersion = errors.DefineNotFound("regional_parameters_version", "unknown Regional Parameters version `{phy_version}`")
 
 // ToTemplatePB returns a ttnpb.EndDeviceTemplate from an end device profile.
 func (p EndDeviceProfile) ToTemplatePB(ids *ttnpb.EndDeviceVersionIdentifiers, info *ttnpb.EndDeviceModel_FirmwareVersion_Profile) (*ttnpb.EndDeviceTemplate, error) {
 	phyVersion, ok := regionalParametersToPB[p.RegionalParametersVersion]
 	if !ok {
-		return nil, errUnknownRegionalParametersVersion.WithAttributes("phyVersion", p.RegionalParametersVersion)
+		return nil, errRegionalParametersVersion.WithAttributes("phy_version", p.RegionalParametersVersion)
 	}
 
 	paths := []string{

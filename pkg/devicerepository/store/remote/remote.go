@@ -84,14 +84,14 @@ func (s *remoteStore) GetBrands(req store.GetBrandsRequest) (*store.GetBrandsRes
 }
 
 var (
-	errUnknownBrand = errors.DefineNotFound("unknown_brand", "unknown brand `{brand_id}`")
+	errBrandNotFound = errors.DefineNotFound("unknown_brand", "unknown brand `{brand_id}`")
 )
 
 // listModelsByBrand gets available end device models by a single brand.
 func (s *remoteStore) listModelsByBrand(req store.GetModelsRequest) (*store.GetModelsResponse, error) {
 	b, err := s.fetcher.File("vendor", req.BrandID, "index.yaml")
 	if err != nil {
-		return nil, errUnknownBrand.WithAttributes("brand_id", req.BrandID)
+		return nil, errBrandNotFound.WithAttributes("brand_id", req.BrandID)
 	}
 	index := VendorEndDevicesIndex{}
 	if err := yaml.Unmarshal(b, &index); err != nil {
@@ -165,6 +165,8 @@ func (s *remoteStore) GetModels(req store.GetModelsRequest) (*store.GetModelsRes
 
 var (
 	errModelNotFound           = errors.DefineNotFound("model_not_found", "model `{brand_id}/{model_id}` not found")
+	errBandNotFound            = errors.DefineNotFound("unknown_band", "band not found `{band_id}`")
+	errNoProfileForBand        = errors.DefineNotFound("no_profile_for_bnad", "device does not have a profile for band `{region}`")
 	errFirmwareVersionNotFound = errors.DefineNotFound("firmware_version_not_found", "firmware version `{firmware_version}` for model `{brand_id}/{model_id}` not found")
 )
 
@@ -190,11 +192,11 @@ func (s *remoteStore) GetTemplate(ids *ttnpb.EndDeviceVersionIdentifiers) (*ttnp
 		}
 
 		if _, ok := bandIDToRegion[ids.BandID]; !ok {
-			return nil, errUnknownBand.WithAttributes("unknown_band", ids.BandID)
+			return nil, errBandNotFound.WithAttributes("unknown_band", ids.BandID)
 		}
 		profileInfo, ok := ver.Profiles[ids.BandID]
 		if !ok {
-			return nil, errNoProfile.WithAttributes(
+			return nil, errNoProfileForBand.WithAttributes(
 				"band_id", ids.BandID,
 			)
 		}
@@ -243,11 +245,11 @@ func (s *remoteStore) getCodec(ids *ttnpb.EndDeviceVersionIdentifiers, chooseFil
 		}
 
 		if _, ok := bandIDToRegion[ids.BandID]; !ok {
-			return nil, errUnknownBand.WithAttributes("unknown_band", ids.BandID)
+			return nil, errBandNotFound.WithAttributes("unknown_band", ids.BandID)
 		}
 		profileInfo, ok := ver.Profiles[ids.BandID]
 		if !ok {
-			return nil, errNoProfile.WithAttributes(
+			return nil, errNoProfileForBand.WithAttributes(
 				"band_id", ids.BandID,
 			)
 		}

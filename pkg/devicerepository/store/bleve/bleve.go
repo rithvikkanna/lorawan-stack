@@ -16,6 +16,7 @@ package bleve
 
 import (
 	"context"
+	"os"
 	"path"
 	"sync"
 	"time"
@@ -51,10 +52,7 @@ type bleveStore struct {
 	refreshCh <-chan time.Time
 }
 
-var (
-	errNoWorkingDirectory = errors.DefineInvalidArgument("no_working_directory", "no working directory specified")
-	errNoFetcherConfig    = errors.DefineInvalidArgument("no_fetcher_config", "no index fetcher configuration specified")
-)
+var errNoFetcherConfig = errors.DefineInvalidArgument("no_fetcher_config", "no index fetcher configuration specified")
 
 // NewStore returns a new Device Repository store with indexing capabilities (using bleve).
 func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, error) {
