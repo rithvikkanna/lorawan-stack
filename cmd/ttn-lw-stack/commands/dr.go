@@ -50,7 +50,7 @@ var (
 	}
 	drInitCommand = &cobra.Command{
 		Use:   "init",
-		Short: "Initialize Device Repository",
+		Short: "Fetch and extract Device Repository index files",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config.DeviceRepository.Store.Bleve.AutoInit = true
 			config.DeviceRepository.Store.Bleve.RefreshInterval = 0
@@ -64,9 +64,9 @@ var (
 func init() {
 	Root.AddCommand(drCommand)
 
-	drCreateIndexCommand.Flags().String("output", "", "Place to create the new index")
+	drCreateIndexCommand.Flags().String("output", "", "Directory where the new index will be created")
 	drCreateIndexCommand.Flags().String("source", "", "Path to root directory of lorawan-devices repository")
-	drCreateIndexCommand.Flags().Bool("overwrite", false, "Overwrite previous index files")
+	drCreateIndexCommand.Flags().Bool("overwrite", false, "Overwrite existing index files")
 	drCommand.AddCommand(drCreateIndexCommand)
 	drCommand.AddCommand(drInitCommand)
 }
