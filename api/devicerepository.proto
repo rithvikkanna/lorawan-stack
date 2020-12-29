@@ -327,7 +327,7 @@ service DeviceRepository {
 
   rpc ListModels(ListEndDeviceModelsRequest) returns (ListEndDeviceModelsResponse) {
     option (google.api.http) = {
-      get: "/dr/appications/{application_ids.application_id}/brands/{brand_id}/models"
+      get: "/dr/applications/{application_ids.application_id}/brands/{brand_id}/models"
       additional_bindings {
         get: "/dr/applications/{application_ids.application_id}/models"
       }

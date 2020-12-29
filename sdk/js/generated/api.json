@@ -8388,7 +8388,7 @@
                   "rules": [
                     {
                       "method": "GET",
-                      "pattern": "/dr/appications/{application_ids.application_id}/brands/{brand_id}/models"
+                      "pattern": "/dr/applications/{application_ids.application_id}/brands/{brand_id}/models"
                     },
                     {
                       "method": "GET",

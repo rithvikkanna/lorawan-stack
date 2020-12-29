@@ -3303,84 +3303,6 @@
         ]
       }
     },
-    "/dr/appications/{application_ids.application_id}/brands/{brand_id}/models": {
-      "get": {
-        "operationId": "DeviceRepository_ListModels",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v3ListEndDeviceModelsResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "application_ids.application_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "brand_id",
-            "description": "List end devices from a specific brand.",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "limit",
-            "description": "Limit the number of results per page.",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "page",
-            "description": "Page number for pagination. 0 is interpreted as 1.",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "order_by",
-            "description": "Order end devices.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "search",
-            "description": "List end devices matching a query string.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "field_mask.paths",
-            "description": "The set of field mask paths.",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          }
-        ],
-        "tags": [
-          "DeviceRepository"
-        ]
-      }
-    },
     "/dr/applications/{application_ids.application_id}/brands": {
       "get": {
         "operationId": "DeviceRepository_ListBrands",
@@ -3481,6 +3403,84 @@
             "description": "Brand identifier, as defined in the Device Repository.",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "field_mask.paths",
+            "description": "The set of field mask paths.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "DeviceRepository"
+        ]
+      }
+    },
+    "/dr/applications/{application_ids.application_id}/brands/{brand_id}/models": {
+      "get": {
+        "operationId": "DeviceRepository_ListModels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3ListEndDeviceModelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "application_ids.application_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "brand_id",
+            "description": "List end devices from a specific brand.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "description": "Limit the number of results per page.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "description": "Page number for pagination. 0 is interpreted as 1.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "order_by",
+            "description": "Order end devices.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "search",
+            "description": "List end devices matching a query string.",
+            "in": "query",
+            "required": false,
             "type": "string"
           },
           {

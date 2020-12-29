@@ -1563,7 +1563,7 @@ var (
 
 	pattern_DeviceRepository_GetBrand_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"dr", "applications", "application_ids.application_id", "brands", "brand_id"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_DeviceRepository_ListModels_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"dr", "appications", "application_ids.application_id", "brands", "brand_id", "models"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_DeviceRepository_ListModels_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"dr", "applications", "application_ids.application_id", "brands", "brand_id", "models"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_DeviceRepository_ListModels_1 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"dr", "applications", "application_ids.application_id", "models"}, "", runtime.AssumeColonVerbOpt(true)))
 

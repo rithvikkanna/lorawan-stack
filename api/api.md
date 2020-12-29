@@ -2336,7 +2336,7 @@ ApplicationRegistry, ClientRegistry, GatewayRegistry, OrganizationRegistry and U
 | ----------- | ------ | ------- | ---- |
 | `ListBrands` | `GET` | `/api/v3/dr/applications/{application_ids.application_id}/brands` |  |
 | `GetBrand` | `GET` | `/api/v3/dr/applications/{application_ids.application_id}/brands/{brand_id}` |  |
-| `ListModels` | `GET` | `/api/v3/dr/appications/{application_ids.application_id}/brands/{brand_id}/models` |  |
+| `ListModels` | `GET` | `/api/v3/dr/applications/{application_ids.application_id}/brands/{brand_id}/models` |  |
 | `ListModels` | `GET` | `/api/v3/dr/applications/{application_ids.application_id}/models` |  |
 | `GetModel` | `GET` | `/api/v3/dr/applications/{application_ids.application_id}/brands/{brand_id}/models/{model_id}` |  |
 | `GetTemplate` | `GET` | `/api/v3/dr/applications/{application_ids.application_id}/brands/{version_ids.brand_id}/models/{version_ids.model_id}/{version_ids.firmware_version}/{version_ids.band_id}/template` |  |
