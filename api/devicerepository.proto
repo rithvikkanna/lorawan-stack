@@ -173,13 +173,28 @@ message EndDeviceModel {
     // Links to other device videos.
     repeated string other = 2;
   }
+  // Device video.
+  string video = 16;
   // Device videos.
-  Videos videos = 16;
+  Videos videos = 17;
 
   // Device information page URL.
-  string product_url = 17 [(gogoproto.customname) = "ProductURL"];
+  string product_url = 18 [(gogoproto.customname) = "ProductURL"];
   // Device datasheet URL.
-  string datasheet_url = 18 [(gogoproto.customname) = "DatasheetURL"];
+  string datasheet_url = 19 [(gogoproto.customname) = "DatasheetURL"];
+
+  message ResellerURL {
+    message Reseller {
+      // Reseller name.
+      string name = 1;
+      // Reseller regions.
+      repeated string region = 2;
+      // Reseller URL.
+      string url = 3 [(gogoproto.customname) = "URL"];
+    }
+  }
+  // Reseller URLs.
+  repeated ResellerURL reseller_urls = 20;
 
   message Compliances {
     message Compliance {
@@ -194,10 +209,10 @@ message EndDeviceModel {
     repeated Compliance radio_equipment = 2;
   }
   // List of standards the device is compliant with.
-  Compliances compliances = 19;
+  Compliances compliances = 21;
 
   // List of any additional radios included in the device.
-  repeated string additional_radios = 20;
+  repeated string additional_radios = 22;
 }
 
 message GetEndDeviceBrandRequest {

@@ -7323,6 +7323,16 @@
               "defaultValue": ""
             },
             {
+              "name": "video",
+              "description": "Device video.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
               "name": "videos",
               "description": "Device videos.",
               "label": "",
@@ -7349,6 +7359,16 @@
               "type": "string",
               "longType": "string",
               "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "reseller_urls",
+              "description": "Reseller URLs.",
+              "label": "repeated",
+              "type": "ResellerURL",
+              "longType": "EndDeviceModel.ResellerURL",
+              "fullType": "ttn.lorawan.v3.EndDeviceModel.ResellerURL",
               "ismap": false,
               "defaultValue": ""
             },
@@ -7787,6 +7807,57 @@
               "name": "other",
               "description": "List of other device photos.",
               "label": "repeated",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ResellerURL",
+          "longName": "EndDeviceModel.ResellerURL",
+          "fullName": "ttn.lorawan.v3.EndDeviceModel.ResellerURL",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": false,
+          "extensions": [],
+          "fields": []
+        },
+        {
+          "name": "Reseller",
+          "longName": "EndDeviceModel.ResellerURL.Reseller",
+          "fullName": "ttn.lorawan.v3.EndDeviceModel.ResellerURL.Reseller",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "name",
+              "description": "Reseller name.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "region",
+              "description": "Reseller regions.",
+              "label": "repeated",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "defaultValue": ""
+            },
+            {
+              "name": "url",
+              "description": "Reseller URL.",
+              "label": "",
               "type": "string",
               "longType": "string",
               "fullType": "string",

@@ -255,6 +255,8 @@ func (m *EndDeviceModel) ValidateFields(paths ...string) error {
 				}
 			}
 
+		case "video":
+			// no validation rules for Video
 		case "videos":
 
 			if v, ok := interface{}(m.GetVideos()).(interface{ ValidateFields(...string) error }); ok {
@@ -271,6 +273,23 @@ func (m *EndDeviceModel) ValidateFields(paths ...string) error {
 			// no validation rules for ProductURL
 		case "datasheet_url":
 			// no validation rules for DatasheetURL
+		case "reseller_urls":
+
+			for idx, item := range m.GetResellerUrls() {
+				_, _ = idx, item
+
+				if v, ok := interface{}(item).(interface{ ValidateFields(...string) error }); ok {
+					if err := v.ValidateFields(subs...); err != nil {
+						return EndDeviceModelValidationError{
+							field:  fmt.Sprintf("reseller_urls[%v]", idx),
+							reason: "embedded message failed validation",
+							cause:  err,
+						}
+					}
+				}
+
+			}
+
 		case "compliances":
 
 			if v, ok := interface{}(m.GetCompliances()).(interface{ ValidateFields(...string) error }); ok {
@@ -2040,6 +2059,73 @@ var _ interface {
 	ErrorName() string
 } = EndDeviceModel_VideosValidationError{}
 
+// ValidateFields checks the field values on EndDeviceModel_ResellerURL with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, an error is returned.
+func (m *EndDeviceModel_ResellerURL) ValidateFields(paths ...string) error {
+	if len(paths) > 0 {
+		return fmt.Errorf("message EndDeviceModel_ResellerURL has no fields, but paths %s were specified", paths)
+	}
+	return nil
+}
+
+// EndDeviceModel_ResellerURLValidationError is the validation error returned
+// by EndDeviceModel_ResellerURL.ValidateFields if the designated constraints
+// aren't met.
+type EndDeviceModel_ResellerURLValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e EndDeviceModel_ResellerURLValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e EndDeviceModel_ResellerURLValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e EndDeviceModel_ResellerURLValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e EndDeviceModel_ResellerURLValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e EndDeviceModel_ResellerURLValidationError) ErrorName() string {
+	return "EndDeviceModel_ResellerURLValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e EndDeviceModel_ResellerURLValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sEndDeviceModel_ResellerURL.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = EndDeviceModel_ResellerURLValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = EndDeviceModel_ResellerURLValidationError{}
+
 // ValidateFields checks the field values on EndDeviceModel_Compliances with
 // the rules defined in the proto definition for this message. If any rules
 // are violated, an error is returned.
@@ -2349,6 +2435,94 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = EndDeviceModel_OperatingConditions_LimitsValidationError{}
+
+// ValidateFields checks the field values on
+// EndDeviceModel_ResellerURL_Reseller with the rules defined in the proto
+// definition for this message. If any rules are violated, an error is returned.
+func (m *EndDeviceModel_ResellerURL_Reseller) ValidateFields(paths ...string) error {
+	if m == nil {
+		return nil
+	}
+
+	if len(paths) == 0 {
+		paths = EndDeviceModel_ResellerURL_ResellerFieldPathsNested
+	}
+
+	for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+		_ = subs
+		switch name {
+		case "name":
+			// no validation rules for Name
+		case "region":
+
+		case "url":
+			// no validation rules for URL
+		default:
+			return EndDeviceModel_ResellerURL_ResellerValidationError{
+				field:  name,
+				reason: "invalid field path",
+			}
+		}
+	}
+	return nil
+}
+
+// EndDeviceModel_ResellerURL_ResellerValidationError is the validation error
+// returned by EndDeviceModel_ResellerURL_Reseller.ValidateFields if the
+// designated constraints aren't met.
+type EndDeviceModel_ResellerURL_ResellerValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e EndDeviceModel_ResellerURL_ResellerValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e EndDeviceModel_ResellerURL_ResellerValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e EndDeviceModel_ResellerURL_ResellerValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e EndDeviceModel_ResellerURL_ResellerValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e EndDeviceModel_ResellerURL_ResellerValidationError) ErrorName() string {
+	return "EndDeviceModel_ResellerURL_ResellerValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e EndDeviceModel_ResellerURL_ResellerValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sEndDeviceModel_ResellerURL_Reseller.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = EndDeviceModel_ResellerURL_ResellerValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = EndDeviceModel_ResellerURL_ResellerValidationError{}
 
 // ValidateFields checks the field values on
 // EndDeviceModel_Compliances_Compliance with the rules defined in the proto

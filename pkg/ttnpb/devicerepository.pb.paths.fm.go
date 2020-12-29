@@ -57,7 +57,9 @@ var EndDeviceModelFieldPathsNested = []string{
 	"photos.main",
 	"photos.other",
 	"product_url",
+	"reseller_urls",
 	"sensors",
+	"video",
 	"videos",
 	"videos.main",
 	"videos.other",
@@ -82,7 +84,9 @@ var EndDeviceModelFieldPathsTopLevel = []string{
 	"operating_conditions",
 	"photos",
 	"product_url",
+	"reseller_urls",
 	"sensors",
+	"video",
 	"videos",
 	"weight",
 }
@@ -280,6 +284,8 @@ var EndDeviceModel_VideosFieldPathsTopLevel = []string{
 	"main",
 	"other",
 }
+var EndDeviceModel_ResellerURLFieldPathsNested []string
+var EndDeviceModel_ResellerURLFieldPathsTopLevel []string
 var EndDeviceModel_CompliancesFieldPathsNested = []string{
 	"radio_equipment",
 	"safety",
@@ -308,6 +314,17 @@ var EndDeviceModel_OperatingConditions_LimitsFieldPathsNested = []string{
 var EndDeviceModel_OperatingConditions_LimitsFieldPathsTopLevel = []string{
 	"max",
 	"min",
+}
+var EndDeviceModel_ResellerURL_ResellerFieldPathsNested = []string{
+	"name",
+	"region",
+	"url",
+}
+
+var EndDeviceModel_ResellerURL_ResellerFieldPathsTopLevel = []string{
+	"name",
+	"region",
+	"url",
 }
 var EndDeviceModel_Compliances_ComplianceFieldPathsNested = []string{
 	"body",

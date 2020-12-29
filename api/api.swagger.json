@@ -8881,6 +8881,9 @@
         }
       }
     },
+    "EndDeviceModelResellerURL": {
+      "type": "object"
+    },
     "EndDeviceModelVideos": {
       "type": "object",
       "properties": {
@@ -11884,6 +11887,10 @@
           "$ref": "#/definitions/EndDeviceModelPhotos",
           "description": "Device photos."
         },
+        "video": {
+          "type": "string",
+          "description": "Device video."
+        },
         "videos": {
           "$ref": "#/definitions/EndDeviceModelVideos",
           "description": "Device videos."
@@ -11895,6 +11902,13 @@
         "datasheet_url": {
           "type": "string",
           "description": "Device datasheet URL."
+        },
+        "reseller_urls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EndDeviceModelResellerURL"
+          },
+          "description": "Reseller URLs."
         },
         "compliances": {
           "$ref": "#/definitions/EndDeviceModelCompliances",

@@ -138,6 +138,8 @@
   - [Message `EndDeviceModel.OperatingConditions`](#ttn.lorawan.v3.EndDeviceModel.OperatingConditions)
   - [Message `EndDeviceModel.OperatingConditions.Limits`](#ttn.lorawan.v3.EndDeviceModel.OperatingConditions.Limits)
   - [Message `EndDeviceModel.Photos`](#ttn.lorawan.v3.EndDeviceModel.Photos)
+  - [Message `EndDeviceModel.ResellerURL`](#ttn.lorawan.v3.EndDeviceModel.ResellerURL)
+  - [Message `EndDeviceModel.ResellerURL.Reseller`](#ttn.lorawan.v3.EndDeviceModel.ResellerURL.Reseller)
   - [Message `EndDeviceModel.Videos`](#ttn.lorawan.v3.EndDeviceModel.Videos)
   - [Message `GetEndDeviceBrandRequest`](#ttn.lorawan.v3.GetEndDeviceBrandRequest)
   - [Message `GetEndDeviceModelRequest`](#ttn.lorawan.v3.GetEndDeviceModelRequest)
@@ -2097,9 +2099,11 @@ ApplicationRegistry, ClientRegistry, GatewayRegistry, OrganizationRegistry and U
 | `key_provisioning` | [`KeyProvisioning`](#ttn.lorawan.v3.KeyProvisioning) | repeated | Supported key provisioning methods. |
 | `key_security` | [`KeySecurity`](#ttn.lorawan.v3.KeySecurity) |  | Device key security. |
 | `photos` | [`EndDeviceModel.Photos`](#ttn.lorawan.v3.EndDeviceModel.Photos) |  | Device photos. |
+| `video` | [`string`](#string) |  | Device video. |
 | `videos` | [`EndDeviceModel.Videos`](#ttn.lorawan.v3.EndDeviceModel.Videos) |  | Device videos. |
 | `product_url` | [`string`](#string) |  | Device information page URL. |
 | `datasheet_url` | [`string`](#string) |  | Device datasheet URL. |
+| `reseller_urls` | [`EndDeviceModel.ResellerURL`](#ttn.lorawan.v3.EndDeviceModel.ResellerURL) | repeated | Reseller URLs. |
 | `compliances` | [`EndDeviceModel.Compliances`](#ttn.lorawan.v3.EndDeviceModel.Compliances) |  | List of standards the device is compliant with. |
 | `additional_radios` | [`string`](#string) | repeated | List of any additional radios included in the device. |
 
@@ -2187,6 +2191,16 @@ ApplicationRegistry, ClientRegistry, GatewayRegistry, OrganizationRegistry and U
 | ----- | ---- | ----- | ----------- |
 | `main` | [`string`](#string) |  | Main device photo. |
 | `other` | [`string`](#string) | repeated | List of other device photos. |
+
+### <a name="ttn.lorawan.v3.EndDeviceModel.ResellerURL">Message `EndDeviceModel.ResellerURL`</a>
+
+### <a name="ttn.lorawan.v3.EndDeviceModel.ResellerURL.Reseller">Message `EndDeviceModel.ResellerURL.Reseller`</a>
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `name` | [`string`](#string) |  | Reseller name. |
+| `region` | [`string`](#string) | repeated | Reseller regions. |
+| `url` | [`string`](#string) |  | Reseller URL. |
 
 ### <a name="ttn.lorawan.v3.EndDeviceModel.Videos">Message `EndDeviceModel.Videos`</a>
 
