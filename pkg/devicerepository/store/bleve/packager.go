@@ -71,7 +71,7 @@ func CreatePackage(ctx context.Context, f fetch.Interface, workingDirectory, des
 	s := remote.NewRemoteStore(f)
 
 	workingDirectory = strings.TrimRight(workingDirectory, "/")
-	if err := os.MkdirAll(workingDirectory, 0755); err != nil {
+	if err := os.MkdirAll(workingDirectory, 0644); err != nil {
 		return err
 	}
 
