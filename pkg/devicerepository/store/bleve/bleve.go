@@ -59,7 +59,11 @@ var (
 // NewStore returns a new Device Repository store with indexing capabilities (using bleve).
 func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, error) {
 	if c.WorkingDirectory == "" {
-		return nil, errNoWorkingDirectory.New()
+		var err error
+		c.WorkingDirectory, err = os.Getwd()
+		if err != nil {
+			return nil, err
+		}
 	}
 	if f == nil {
 		return nil, errNoFetcherConfig.New()
@@ -78,7 +82,7 @@ func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, e
 			return nil, err
 		}
 	}
-	if err := s.initStore(); err != nil {
+	if err := s.initStore(ctx); err != nil {
 		return nil, err
 	}
 
@@ -101,6 +105,7 @@ func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, e
 					logger := log.FromContext(ctx)
 
 					logger.Debug("Refreshing Device Repository")
+					if err := s.initStore(s.ctx); err != nil {
 						logger.WithError(err).Error("Failed to refresh Device Repository")
 					} else {
 						logger.Info("Updated Device Repository")
@@ -124,30 +129,26 @@ func (s *bleveStore) fetchStore() error {
 	return (&archiver{}).Unarchive(b, s.workingDirectory)
 }
 
-var (
-	errIndexTimeout = errors.DefineFailedPrecondition("index_timeout", "Timed out while opening index. Make sure the index is not being used by another process")
-)
-
-func (s *bleveStore) openIndexWithTimeout(path string, timeout time.Duration) (bleve.Index, error) {
+func (s *bleveStore) openIndex(ctx context.Context, path string) (bleve.Index, error) {
 	var (
 		err   error
 		index bleve.Index
 	)
-	ch := make(chan struct{}, 1)
-	defer close(ch)
+	done := make(chan struct{}, 1)
+	defer close(done)
 	go func() {
 		index, err = bleve.Open(path)
-		ch <- struct{}{}
+		done <- struct{}{}
 	}()
 	select {
-	case <-ch:
+	case <-done:
 		return index, err
-	case <-time.After(timeout):
-		return nil, errIndexTimeout.New()
+	case <-ctx.Done():
+		return nil, ctx.Err()
 	}
 }
 
-func (s *bleveStore) initStore() error {
+func (s *bleveStore) initStore(ctx context.Context) error {
 	var err error
 	s.brandsIndexMu.Lock()
 	defer s.brandsIndexMu.Unlock()
@@ -156,7 +157,8 @@ func (s *bleveStore) initStore() error {
 			return err
 		}
 	}
-	s.brandsIndex, err = s.openIndexWithTimeout(path.Join(s.workingDirectory, brandsIndexPath), defaultTimeout)
+	ctx, _ = context.WithTimeout(ctx, defaultTimeout)
+	s.brandsIndex, err = s.openIndex(ctx, path.Join(s.workingDirectory, brandsIndexPath))
 	if err != nil {
 		return err
 	}
@@ -167,7 +169,8 @@ func (s *bleveStore) initStore() error {
 			return err
 		}
 	}
-	s.modelsIndex, err = s.openIndexWithTimeout(path.Join(s.workingDirectory, modelsIndexPath), defaultTimeout)
+	ctx, _ = context.WithTimeout(ctx, defaultTimeout)
+	s.modelsIndex, err = s.openIndex(ctx, path.Join(s.workingDirectory, modelsIndexPath))
 	if err != nil {
 		return err
 	}
