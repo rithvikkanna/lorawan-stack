@@ -361,14 +361,14 @@ func (dst *EndDeviceModel) SetFields(src *EndDeviceModel, paths ...string) error
 				var zero string
 				dst.DatasheetURL = zero
 			}
-		case "reseller_urls":
+		case "resellers":
 			if len(subs) > 0 {
-				return fmt.Errorf("'reseller_urls' has no subfields, but %s were specified", subs)
+				return fmt.Errorf("'resellers' has no subfields, but %s were specified", subs)
 			}
 			if src != nil {
-				dst.ResellerUrls = src.ResellerUrls
+				dst.Resellers = src.Resellers
 			} else {
-				dst.ResellerUrls = nil
+				dst.Resellers = nil
 			}
 		case "compliances":
 			if len(subs) > 0 {
@@ -1155,12 +1155,42 @@ func (dst *EndDeviceModel_Videos) SetFields(src *EndDeviceModel_Videos, paths ..
 	return nil
 }
 
-func (dst *EndDeviceModel_ResellerURL) SetFields(src *EndDeviceModel_ResellerURL, paths ...string) error {
-	if len(paths) != 0 {
-		return fmt.Errorf("message EndDeviceModel_ResellerURL has no fields, but paths %s were specified", paths)
-	}
-	if src != nil {
-		*dst = *src
+func (dst *EndDeviceModel_Reseller) SetFields(src *EndDeviceModel_Reseller, paths ...string) error {
+	for name, subs := range _processPaths(paths) {
+		switch name {
+		case "name":
+			if len(subs) > 0 {
+				return fmt.Errorf("'name' has no subfields, but %s were specified", subs)
+			}
+			if src != nil {
+				dst.Name = src.Name
+			} else {
+				var zero string
+				dst.Name = zero
+			}
+		case "region":
+			if len(subs) > 0 {
+				return fmt.Errorf("'region' has no subfields, but %s were specified", subs)
+			}
+			if src != nil {
+				dst.Region = src.Region
+			} else {
+				dst.Region = nil
+			}
+		case "url":
+			if len(subs) > 0 {
+				return fmt.Errorf("'url' has no subfields, but %s were specified", subs)
+			}
+			if src != nil {
+				dst.URL = src.URL
+			} else {
+				var zero string
+				dst.URL = zero
+			}
+
+		default:
+			return fmt.Errorf("invalid field: '%s'", name)
+		}
 	}
 	return nil
 }
@@ -1255,46 +1285,6 @@ func (dst *EndDeviceModel_OperatingConditions_Limits) SetFields(src *EndDeviceMo
 				dst.Max = src.Max
 			} else {
 				dst.Max = nil
-			}
-
-		default:
-			return fmt.Errorf("invalid field: '%s'", name)
-		}
-	}
-	return nil
-}
-
-func (dst *EndDeviceModel_ResellerURL_Reseller) SetFields(src *EndDeviceModel_ResellerURL_Reseller, paths ...string) error {
-	for name, subs := range _processPaths(paths) {
-		switch name {
-		case "name":
-			if len(subs) > 0 {
-				return fmt.Errorf("'name' has no subfields, but %s were specified", subs)
-			}
-			if src != nil {
-				dst.Name = src.Name
-			} else {
-				var zero string
-				dst.Name = zero
-			}
-		case "region":
-			if len(subs) > 0 {
-				return fmt.Errorf("'region' has no subfields, but %s were specified", subs)
-			}
-			if src != nil {
-				dst.Region = src.Region
-			} else {
-				dst.Region = nil
-			}
-		case "url":
-			if len(subs) > 0 {
-				return fmt.Errorf("'url' has no subfields, but %s were specified", subs)
-			}
-			if src != nil {
-				dst.URL = src.URL
-			} else {
-				var zero string
-				dst.URL = zero
 			}
 
 		default:

@@ -7363,12 +7363,12 @@
               "defaultValue": ""
             },
             {
-              "name": "reseller_urls",
+              "name": "resellers",
               "description": "Reseller URLs.",
               "label": "repeated",
-              "type": "ResellerURL",
-              "longType": "EndDeviceModel.ResellerURL",
-              "fullType": "ttn.lorawan.v3.EndDeviceModel.ResellerURL",
+              "type": "Reseller",
+              "longType": "EndDeviceModel.Reseller",
+              "fullType": "ttn.lorawan.v3.EndDeviceModel.Reseller",
               "ismap": false,
               "defaultValue": ""
             },
@@ -7816,19 +7816,9 @@
           ]
         },
         {
-          "name": "ResellerURL",
-          "longName": "EndDeviceModel.ResellerURL",
-          "fullName": "ttn.lorawan.v3.EndDeviceModel.ResellerURL",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": false,
-          "extensions": [],
-          "fields": []
-        },
-        {
           "name": "Reseller",
-          "longName": "EndDeviceModel.ResellerURL.Reseller",
-          "fullName": "ttn.lorawan.v3.EndDeviceModel.ResellerURL.Reseller",
+          "longName": "EndDeviceModel.Reseller",
+          "fullName": "ttn.lorawan.v3.EndDeviceModel.Reseller",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
