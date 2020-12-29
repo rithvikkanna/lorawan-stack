@@ -80,7 +80,7 @@ func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, e
 			return nil, err
 		}
 	}
-	if err := s.initStore(ctx); err != nil {
+	if err := s.initStore(); err != nil {
 		return nil, err
 	}
 
@@ -103,7 +103,7 @@ func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, e
 					logger := log.FromContext(ctx)
 
 					logger.Debug("Refreshing Device Repository")
-					if err := s.initStore(s.ctx); err != nil {
+					if err := s.initStore(); err != nil {
 						logger.WithError(err).Error("Failed to refresh Device Repository")
 					} else {
 						logger.Info("Updated Device Repository")
@@ -146,7 +146,7 @@ func (s *bleveStore) openIndex(ctx context.Context, path string) (bleve.Index, e
 	}
 }
 
-func (s *bleveStore) initStore(ctx context.Context) error {
+func (s *bleveStore) initStore() error {
 	var err error
 	s.brandsIndexMu.Lock()
 	defer s.brandsIndexMu.Unlock()
@@ -155,7 +155,8 @@ func (s *bleveStore) initStore(ctx context.Context) error {
 			return err
 		}
 	}
-	ctx, _ = context.WithTimeout(ctx, defaultTimeout)
+	ctx, cancel := context.WithTimeout(s.ctx, defaultTimeout)
+	defer cancel()
 	s.brandsIndex, err = s.openIndex(ctx, path.Join(s.workingDirectory, brandsIndexPath))
 	if err != nil {
 		return err
@@ -167,7 +168,8 @@ func (s *bleveStore) initStore(ctx context.Context) error {
 			return err
 		}
 	}
-	ctx, _ = context.WithTimeout(ctx, defaultTimeout)
+	ctx, cancel = context.WithTimeout(s.ctx, defaultTimeout)
+	defer cancel()
 	s.modelsIndex, err = s.openIndex(ctx, path.Join(s.workingDirectory, modelsIndexPath))
 	if err != nil {
 		return err
