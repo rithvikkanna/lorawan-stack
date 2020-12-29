@@ -31,7 +31,6 @@ var DefaultDeviceRepositoryConfig = devicerepository.Config{
 		Bleve: bleve.Config{
 			WorkingDirectory: "/tmp/dr",
 			AutoInit:         false,
-			Refresh:          nil,
 		},
 	},
 

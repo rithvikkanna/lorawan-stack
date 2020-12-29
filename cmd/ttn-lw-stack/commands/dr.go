@@ -53,7 +53,7 @@ var (
 		Short: "Initialize Device Repository",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config.DeviceRepository.Store.Bleve.AutoInit = true
-			config.DeviceRepository.Store.Bleve.Refresh = nil
+			config.DeviceRepository.Store.Bleve.RefreshInterval = 0
 
 			_, err := config.DeviceRepository.NewStore(ctx, config.Blob)
 			return err

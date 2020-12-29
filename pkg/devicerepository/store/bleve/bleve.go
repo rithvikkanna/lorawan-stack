@@ -90,8 +90,8 @@ func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, e
 		}
 	}()
 
-	if t := c.Refresh; t != nil {
-		s.refreshCh = time.NewTicker(*t).C
+	if d := c.RefreshInterval; d > 0 {
+		s.refreshCh = time.NewTicker(d).C
 		go func() {
 			for {
 				select {
