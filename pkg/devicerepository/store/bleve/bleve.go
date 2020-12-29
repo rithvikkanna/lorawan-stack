@@ -85,11 +85,9 @@ func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, e
 	}
 
 	go func() {
-		select {
-		case <-s.ctx.Done():
-			s.modelsIndex.Close()
-			s.brandsIndex.Close()
-		}
+		<-s.ctx.Done()
+		s.modelsIndex.Close()
+		s.brandsIndex.Close()
 	}()
 
 	if d := c.RefreshInterval; d > 0 {
