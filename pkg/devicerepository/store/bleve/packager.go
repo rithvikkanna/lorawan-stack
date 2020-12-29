@@ -146,7 +146,7 @@ func CreatePackage(ctx context.Context, f fetch.Interface, workingDirectory, des
 	}
 
 	// archive working directory, keeping only yaml, js and index files.
-	return (&archiver{}).Archive(workingDirectory, destinationFile, func(path string) (string, bool) {
+	return archive(workingDirectory, destinationFile, func(path string) (string, bool) {
 		p := path[len(workingDirectory)+1:]
 		if !strings.HasPrefix(p, brandsIndexPath) &&
 			!strings.HasPrefix(p, modelsIndexPath) &&

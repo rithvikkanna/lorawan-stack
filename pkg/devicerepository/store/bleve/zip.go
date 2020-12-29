@@ -23,10 +23,7 @@ import (
 	"path/filepath"
 )
 
-// archiver archives and extracts data from zip archives.
-type archiver struct{}
-
-func (a *archiver) Archive(sourceDirectory, destinationFile string, fileFilter func(string) (string, bool)) error {
+func archive(sourceDirectory, destinationFile string, fileFilter func(string) (string, bool)) error {
 	f, err := os.Create(destinationFile)
 	if err != nil {
 		return err
@@ -59,7 +56,7 @@ func (a *archiver) Archive(sourceDirectory, destinationFile string, fileFilter f
 	return z.Close()
 }
 
-func (a *archiver) Unarchive(b []byte, destinationDirectory string) error {
+func unarchive(b []byte, destinationDirectory string) error {
 	rd := bytes.NewReader(b)
 	archive, err := zip.NewReader(rd, rd.Size())
 	if err != nil {

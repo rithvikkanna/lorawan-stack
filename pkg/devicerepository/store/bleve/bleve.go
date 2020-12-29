@@ -124,7 +124,7 @@ func (s *bleveStore) fetchStore() error {
 
 	s.storeMu.Lock()
 	defer s.storeMu.Unlock()
-	return (&archiver{}).Unarchive(b, s.workingDirectory)
+	return unarchive(b, s.workingDirectory)
 }
 
 func (s *bleveStore) openIndex(ctx context.Context, path string) (bleve.Index, error) {
