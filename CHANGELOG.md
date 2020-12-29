@@ -12,8 +12,11 @@ For details about compatibility between different releases, see the **Commitment
 ### Added
 
 - Configuration option `is.admin-rights.all` to grant admins all rights, including `_KEYS` and `_ALL`.
+- Configuration option `is.user-registration.contact-info-validation.token-ttl` to customize the validity of contact information validation tokens.
 
 ### Changed
+
+- Emails with temporary tokens now also show when these tokens expire. Custom email templates can use `{{ .TTL }}` and `{{ .FormatTTL }}` to render the expiry durations.
 
 ### Deprecated
 
