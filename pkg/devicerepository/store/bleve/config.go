@@ -22,6 +22,5 @@ import (
 type Config struct {
 	WorkingDirectory string `name:"working-directory" description:"Local directory where temporary Device Repository files are stored"`
 
-	AutoInit bool           `name:"auto-init" description:"Initialize device repository automatically when starting the stack"`
-	Refresh  *time.Duration `name:"refresh" description:"Interval for refreshing device repository"`
+	AutoInit        bool          `name:"auto-init" description:"Initialize Device Repository automatically when starting the stack"`
 }

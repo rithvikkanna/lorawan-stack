@@ -288,12 +288,12 @@ func (c FrequencyPlansConfig) Fetcher(ctx context.Context, blobConf BlobConfig) 
 	}
 }
 
-// DeviceRepositoryConfig defines the source of the device repository.
+// DeviceRepositoryConfig defines the source of the Device Repository.
 type DeviceRepositoryConfig struct {
-	ConfigSource string            `name:"config-source" description:"Source of the device repository (static, directory, url, blob)"`
+	ConfigSource string            `name:"config-source" description:"Source of the Device Repository (static, directory, url, blob)"`
 	Static       map[string][]byte `name:"-"`
-	Directory    string            `name:"directory" description:"OS filesystem directory, which contains device repository"`
-	URL          string            `name:"url" description:"URL, which contains device repository"`
+	Directory    string            `name:"directory" description:"OS filesystem directory, which contains Device Repository"`
+	URL          string            `name:"url" description:"URL, which contains Device Repository"`
 	Blob         BlobPathConfig    `name:"blob"`
 }
 

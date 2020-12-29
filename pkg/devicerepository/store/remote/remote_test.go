@@ -163,7 +163,6 @@ func TestRemoteStore(t *testing.T) {
 	s := remote.NewRemoteStore(fetch.NewMemFetcher(data))
 
 	t.Run("TestGetBrands", func(t *testing.T) {
-
 		t.Run("Limit", func(t *testing.T) {
 			list, err := s.GetBrands(store.GetBrandsRequest{
 				Paths: []string{

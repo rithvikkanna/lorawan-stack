@@ -56,7 +56,7 @@ var (
 	errNoFetcherConfig    = errors.DefineInvalidArgument("no_fetcher_config", "no index fetcher configuration specified")
 )
 
-// NewStore returns a new device repository store with indexing capabilities (using bleve).
+// NewStore returns a new Device Repository store with indexing capabilities (using bleve).
 func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, error) {
 	if c.WorkingDirectory == "" {
 		return nil, errNoWorkingDirectory.New()
@@ -101,8 +101,7 @@ func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, e
 					logger := log.FromContext(ctx)
 
 					logger.Debug("Refreshing Device Repository")
-					if err := s.initStore(); err != nil {
-						logger.WithError(err).Error("Failed to refresh device repository")
+						logger.WithError(err).Error("Failed to refresh Device Repository")
 					} else {
 						logger.Info("Updated Device Repository")
 					}

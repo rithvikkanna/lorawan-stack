@@ -50,7 +50,7 @@ var (
 	}
 	drInitCommand = &cobra.Command{
 		Use:   "init",
-		Short: "Initialize device repository",
+		Short: "Initialize Device Repository",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config.DeviceRepository.Store.Bleve.AutoInit = true
 			config.DeviceRepository.Store.Bleve.Refresh = nil
