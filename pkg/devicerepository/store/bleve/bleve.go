@@ -34,6 +34,9 @@ import (
 // is already in use by a different process.
 var defaultTimeout = 5 * time.Second
 
+// packageFileName is the name of the Device Repository package.
+const packageFileName = "package.zip"
+
 // bleveStore wraps a store.Store adding support for searching/sorting results using a bleve index.
 type bleveStore struct {
 	ctx context.Context
@@ -41,10 +44,9 @@ type bleveStore struct {
 	store   store.Store
 	storeMu sync.RWMutex
 
-	brandsIndex   bleve.Index
-	brandsIndexMu sync.RWMutex
-	modelsIndex   bleve.Index
-	modelsIndexMu sync.RWMutex
+	indexMu     sync.RWMutex
+	brandsIndex bleve.Index
+	modelsIndex bleve.Index
 
 	workingDirectory string
 
@@ -70,24 +72,24 @@ func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, e
 	s := &bleveStore{
 		ctx: ctx,
 
-		store:            remote.NewRemoteStore(fetch.FromFilesystem(c.WorkingDirectory)),
+		store:   remote.NewRemoteStore(fetch.FromFilesystem(c.WorkingDirectory)),
+		fetcher: f,
+
 		workingDirectory: c.WorkingDirectory,
-		fetcher:          f,
 	}
 
-	if c.AutoInit {
-		if err := s.fetchStore(); err != nil {
-			return nil, err
-		}
-	}
-	if err := s.initStore(); err != nil {
+	if err := s.openStore(c.AutoInit); err != nil {
 		return nil, err
 	}
 
 	go func() {
 		<-s.ctx.Done()
-		s.modelsIndex.Close()
-		s.brandsIndex.Close()
+		if s.modelsIndex != nil {
+			s.modelsIndex.Close()
+		}
+		if s.brandsIndex != nil {
+			s.brandsIndex.Close()
+		}
 	}()
 
 	if d := c.RefreshInterval; d > 0 {
@@ -101,7 +103,7 @@ func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, e
 					logger := log.FromContext(ctx)
 
 					logger.Debug("Refreshing Device Repository")
-					if err := s.initStore(); err != nil {
+					if err := s.openStore(true); err != nil {
 						logger.WithError(err).Error("Failed to refresh Device Repository")
 					} else {
 						logger.Info("Updated Device Repository")
@@ -112,17 +114,6 @@ func (c Config) NewStore(ctx context.Context, f fetch.Interface) (store.Store, e
 	}
 
 	return s, nil
-}
-
-func (s *bleveStore) fetchStore() error {
-	b, err := s.fetcher.File("package.zip")
-	if err != nil {
-		return err
-	}
-
-	s.storeMu.Lock()
-	defer s.storeMu.Unlock()
-	return unarchive(b, s.workingDirectory)
 }
 
 func (s *bleveStore) openIndex(ctx context.Context, path string) (bleve.Index, error) {
@@ -144,12 +135,32 @@ func (s *bleveStore) openIndex(ctx context.Context, path string) (bleve.Index, e
 	}
 }
 
-func (s *bleveStore) initStore() error {
+func (s *bleveStore) openStore(withFetch bool) error {
 	var err error
-	s.brandsIndexMu.Lock()
-	defer s.brandsIndexMu.Unlock()
+	s.indexMu.Lock()
+	defer s.indexMu.Unlock()
+
 	if s.brandsIndex != nil {
 		if err := s.brandsIndex.Close(); err != nil {
+			return err
+		}
+	}
+	if s.modelsIndex != nil {
+		if err := s.modelsIndex.Close(); err != nil {
+			return err
+		}
+	}
+	if withFetch {
+		b, err := s.fetcher.File(packageFileName)
+		if err != nil {
+			return err
+		}
+
+		// Lock templates and payload formatters for as little as possible
+		s.storeMu.Lock()
+		err = unarchive(b, s.workingDirectory)
+		s.storeMu.Unlock()
+		if err != nil {
 			return err
 		}
 	}
@@ -158,13 +169,6 @@ func (s *bleveStore) initStore() error {
 	s.brandsIndex, err = s.openIndex(ctx, path.Join(s.workingDirectory, brandsIndexPath))
 	if err != nil {
 		return err
-	}
-	s.modelsIndexMu.Lock()
-	defer s.modelsIndexMu.Unlock()
-	if s.modelsIndex != nil {
-		if err := s.modelsIndex.Close(); err != nil {
-			return err
-		}
 	}
 	ctx, cancel = context.WithTimeout(s.ctx, defaultTimeout)
 	defer cancel()

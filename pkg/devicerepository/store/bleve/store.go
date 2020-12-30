@@ -60,12 +60,12 @@ func (s *bleveStore) GetBrands(req store.GetBrandsRequest) (*store.GetBrandsResp
 		searchRequest.SortBy([]string{"-BrandName"})
 	}
 
-	s.brandsIndexMu.RLock()
+	s.indexMu.RLock()
 	result, err := s.brandsIndex.Search(searchRequest)
 	if err != nil {
 		return nil, err
 	}
-	s.brandsIndexMu.RUnlock()
+	s.indexMu.RUnlock()
 
 	brands := make([]*ttnpb.EndDeviceBrand, 0, len(result.Hits))
 	for _, hit := range result.Hits {
@@ -132,12 +132,12 @@ func (s *bleveStore) GetModels(req store.GetModelsRequest) (*store.GetModelsResp
 		searchRequest.SortBy([]string{"-ModelName"})
 	}
 
-	s.modelsIndexMu.RLock()
+	s.indexMu.RLock()
 	result, err := s.modelsIndex.Search(searchRequest)
 	if err != nil {
 		return nil, err
 	}
-	s.modelsIndexMu.RUnlock()
+	s.indexMu.RUnlock()
 
 	models := make([]*ttnpb.EndDeviceModel, 0, len(result.Hits))
 	for _, hit := range result.Hits {

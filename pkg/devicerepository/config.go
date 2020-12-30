@@ -56,7 +56,7 @@ func (c Config) NewStore(ctx context.Context, blobConf config.BlobConfig) (store
 		fetcher = fetch.FromFilesystem(c.Directory)
 	case "url":
 		var err error
-		fetcher, err = fetch.FromHTTP(c.URL, true)
+		fetcher, err = fetch.FromHTTP(c.URL, false)
 		if err != nil {
 			return nil, err
 		}
