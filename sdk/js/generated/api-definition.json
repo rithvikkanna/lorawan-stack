@@ -1574,7 +1574,7 @@
       "http": [
         {
           "method": "get",
-          "pattern": "/dr/appications/{application_ids.application_id}/brands/{brand_id}/models",
+          "pattern": "/dr/applications/{application_ids.application_id}/brands/{brand_id}/models",
           "parameters": [
             "application_ids.application_id",
             "brand_id"
@@ -1622,7 +1622,9 @@
         "photos.main",
         "photos.other",
         "product_url",
+        "resellers",
         "sensors",
+        "video",
         "videos",
         "videos.main",
         "videos.other",
@@ -1676,7 +1678,9 @@
         "photos.main",
         "photos.other",
         "product_url",
+        "resellers",
         "sensors",
+        "video",
         "videos",
         "videos.main",
         "videos.other",
