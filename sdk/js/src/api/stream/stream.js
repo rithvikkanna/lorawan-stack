@@ -77,37 +77,38 @@ export default async function(payload, url) {
 
   let buffer = ''
   const reader = response.body.getReader()
+  const onChunk = ({ done, value }) => {
+    if (done) {
+      notify(listeners[EVENTS.CLOSE])
+      listeners = null
+      return
+    }
+
+    const parsed = ArrayBufferToString(value)
+    buffer += parsed
+    const lines = buffer.split(/\n\n/)
+    buffer = lines.pop()
+    for (const line of lines) {
+      notify(listeners[EVENTS.CHUNK], JSON.parse(line).result)
+    }
+
+    return reader.read().then(onChunk)
+  }
   reader
     .read()
-    .then(function(data) {
+    .then(data => {
       notify(listeners[EVENTS.START])
 
       return data
     })
-    .then(function onChunk({ done, value }) {
-      if (done) {
-        notify(listeners[EVENTS.CLOSE])
-        listeners = null
-        return
-      }
-
-      const parsed = ArrayBufferToString(value)
-      buffer += parsed
-      const lines = buffer.split(/\n\n/)
-      buffer = lines.pop()
-      for (const line of lines) {
-        notify(listeners[EVENTS.CHUNK], JSON.parse(line).result)
-      }
-
-      return reader.read().then(onChunk)
-    })
-    .catch(function(error) {
+    .then(onChunk)
+    .catch(error => {
       notify(listeners[EVENTS.ERROR], error)
       listeners = null
     })
 
   return {
-    on(eventName, callback) {
+    on: (eventName, callback) => {
       if (listeners[eventName] === undefined) {
         throw new Error(
           `${eventName} event is not supported. Should be one of: start, error, chunk or close`,
@@ -118,10 +119,15 @@ export default async function(payload, url) {
 
       return this
     },
-    close() {
-      reader.cancel().then(() => {
-        abortController.abort()
-      })
+    close: () => {
+      reader
+        .cancel()
+        .then(() => {
+          abortController.abort()
+        })
+        .catch(error => {
+          notify(listeners[EVENTS.ERROR], error)
+        })
     },
   }
 }
