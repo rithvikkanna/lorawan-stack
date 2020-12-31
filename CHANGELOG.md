@@ -16,6 +16,8 @@ For details about compatibility between different releases, see the **Commitment
 
 ### Changed
 
+- Improved handling of connection issues in the Console, as well as automatic reconnects.
+
 ### Deprecated
 
 ### Removed
