@@ -31,7 +31,7 @@ const m = defineMessages({
   getSupport: 'Get support',
 })
 
-const Footer = function({ className, links, supportLink, isOnline }) {
+const Footer = ({ className, links, supportLink, onlineStatus }) => {
   return (
     <footer className={classnames(className, style.footer)}>
       <div>
@@ -48,7 +48,7 @@ const Footer = function({ className, links, supportLink, isOnline }) {
             <Message content={item.title} />
           </Link.Anchor>
         ))}
-        <OfflineStatus isOnline={isOnline} showOfflineOnly showWarnings />
+        <OfflineStatus onlineStatus={onlineStatus} showOfflineOnly showWarnings />
         <span className={style.version}>v{process.env.VERSION}</span>
         {supportLink && (
           <Button.AnchorLink
@@ -67,8 +67,6 @@ const Footer = function({ className, links, supportLink, isOnline }) {
 Footer.propTypes = {
   /** The classname to be applied to the footer. */
   className: PropTypes.string,
-  /** A flag specifying whether the application is connected to the internet. */
-  isOnline: PropTypes.bool.isRequired,
   /**
    * A list of links to be displayed in the footer component.
    *
@@ -81,6 +79,8 @@ Footer.propTypes = {
       link: PropTypes.string.isRequired,
     }),
   ),
+  /** A flag specifying whether the application is connected to the internet. */
+  onlineStatus: PropTypes.onlineStatus.isRequired,
   /** Optional link for a support button. */
   supportLink: PropTypes.string,
 }
